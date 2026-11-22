@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Remtex Shorts — из одного видео три Shorts за две минуты</title>
+  <meta name="description" content="Remtex Shorts превращает длинные YouTube-видео в вертикальные Shorts с субтитрами и публикует их автоматически. Работает прямо в Telegram." />
+  <meta name="theme-color" content="#08090A" />
+  <meta name="color-scheme" content="dark" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Remtex Shorts" />
+  <meta property="og:title" content="Из одного видео — три вирусных Shorts. За две минуты." />
+  <meta property="og:description" content="Отправьте ссылку на видео в Telegram-бот — получите готовые вертикальные клипы с субтитрами. Без монтажа." />
+  <meta property="og:locale" content="ru_RU" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="One long video. Three viral Shorts. Two minutes." />
+  <meta name="twitter:description" content="Send a link to the Telegram bot and get ready-to-post vertical clips with captions. No editing." />
+  <!-- Добавьте <meta property="og:image" content="https://ВАШ-ДОМЕН/og.png"> (1200×630), когда будет картинка -->
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230F1011'/%3E%3Crect x='.5' y='.5' width='31' height='31' rx='7.5' fill='none' stroke='%23ffffff' stroke-opacity='.14'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Inter,Arial,sans-serif' font-weight='700' font-size='20' fill='%235E6AD2'%3ER%3C/text%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <script>document.documentElement.classList.add('js');</script>
+
+  <style>
+    /* ============ Tokens ============ */
+    :root {
+      --bg: #08090A;
+      --surface: #0F1011;
+      --surface-2: #151617;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.14);
+      --text: #EDEDEF;
+      --muted: #8A8F98;
+      --accent: #5E6AD2;
+      --accent-2: #8B93F8;
+      --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --radius: 12px;
+      --container: 1120px;
+      --header-h: 56px;
+    }
+
+    /* ============ Base ============ */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    h1, h2, h3, h4, p, ul, ol, figure, dl, dd { margin: 0; }
+    ul, ol { padding: 0; list-style: none; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; cursor: pointer; }
+    svg { display: block; }
+    section[id], footer[id] { scroll-margin-top: calc(var(--header-h) + 16px); }
+
+    :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 6px; }
+
+    .skip {
+      position: absolute; left: 12px; top: -48px; z-index: 100;
+      background: var(--surface-2); border: 1px solid var(--border-strong);
+      padding: 8px 14px; border-radius: 8px; font-size: 14px;
+    }
+    .skip:focus { top: 12px; }
+
+    .container { width: 100%; max-width: var(--container); margin: 0 auto; padding: 0 20px; }
+    @media (min-width: 640px) { .container { padding: 0 32px; } }
+
+    .mono { font-family: var(--mono); }
+    .muted { color: var(--muted); }
+    .accent-text {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+
+    .section { padding: 72px 0; border-top: 1px solid var(--border); }
+    @media (min-width: 1024px) { .section { padding: 112px 0; } }
+
+    .eyebrow {
+      font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+    }
+    .h2 {
+      font-size: clamp(30px, 4.6vw, 48px);
+      font-weight: 600; letter-spacing: -0.03em; line-height: 1.1;
+      max-width: 18ch;
+    }
+    .lead { color: var(--muted); font-size: 17px; max-width: 56ch; margin-top: 16px; }
+    .section-head { margin-bottom: 48px; }
+
+    /* ============ Buttons ============ */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      height: 44px; padding: 0 20px; border-radius: 8px;
+      font-size: 15px; font-weight: 500; letter-spacing: -0.01em; white-space: nowrap;
+      border: 1px solid transparent;
+      transition: background-color .2s ease-out, border-color .2s ease-out, box-shadow .2s ease-out;
+    }
+    .btn-primary {
+      background: linear-gradient(180deg, #6571D8 0%, #5560C8 100%);
+      color: #fff;
+      border-color: rgba(139, 147, 248, 0.55);
+      box-shadow: 0 1px 0 rgba(255,255,255,.18) inset, 0 8px 24px -12px rgba(94,106,210,.7);
+    }
+    .btn-primary:hover { background: linear-gradient(180deg, #7480E4 0%, #5E6AD2 100%); border-color: var(--accent-2); }
+    .btn-ghost { background: rgba(255,255,255,.03); border-color: var(--border-strong); color: var(--text); }
+    .btn-ghost:hover { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.22); }
+    .btn-sm { height: 32px; padding: 0 12px; font-size: 13px; }
+    .btn-lg { height: 56px; padding: 0 32px; font-size: 17px; border-radius: 10px; }
+    .btn-block { width: 100%; }
+
+    /* ============ Header ============ */
+    .header {
+      position: sticky; top: 0; z-index: 50; height: var(--header-h);
+      background: rgba(8, 9, 10, 0.72);
+      -webkit-backdrop-filter: saturate(160%) blur(14px); backdrop-filter: saturate(160%) blur(14px);
+      border-bottom: 1px solid transparent;
+      transition: border-color .2s ease-out;
+    }
+    .header.scrolled { border-bottom-color: var(--border); }
+    .header .container { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.02em; font-size: 16px; }
+    .logo-mark {
+      width: 24px; height: 24px; border-radius: 6px; background: var(--surface);
+      border: 1px solid var(--border-strong); display: grid; place-items: center;
+      font-size: 13px; font-weight: 700; color: var(--accent);
+    }
+    .nav { display: flex; align-items: center; gap: 8px; }
+    .nav-link { display: none; color: var(--muted); font-size: 14px; padding: 6px 10px; border-radius: 6px; transition: color .2s ease-out; }
+    .nav-link:hover { color: var(--text); }
+    @media (min-width: 640px) { .nav-link { display: inline-block; } .nav { gap: 12px; } }
+
+    .lang { display: inline-flex; padding: 2px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+    .lang button {
+      border: 0; background: transparent; color: var(--muted);
+      font-family: var(--mono); font-size: 12px; font-weight: 500;
+      padding: 4px 8px; border-radius: 6px; line-height: 1.4;
+      transition: color .2s ease-out, background-color .2s ease-out;
+    }
+    .lang button:hover { color: var(--text); }
+    .lang button[aria-pressed="true"] { background: rgba(255,255,255,.1); color: var(--text); }
+    .cta-long { display: none; }
+    @media (min-width: 480px) { .cta-long { display: inline; } .cta-short { display: none; } }
+
+    /* ============ Hero ============ */
+    .hero { position: relative; padding: 56px 0 72px; overflow: hidden; }
+    .hero::before {
+      content: ""; position: absolute; left: 50%; top: -220px; width: 900px; height: 480px;
+      transform: translateX(-50%);
+      background: radial-gradient(closest-side, rgba(94,106,210,.14), transparent);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px; max-width: 100%;
+      font-family: var(--mono); font-size: 12px; color: var(--muted);
+      padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface);
+    }
+    .badge i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-2); flex: none; }
+    .hero h1 {
+      margin-top: 28px;
+      font-size: clamp(38px, 10.5vw, 48px);
+      font-weight: 600; letter-spacing: -0.03em; line-height: 1.04;
+      max-width: 14ch;
+      text-wrap: balance;
+    }
+    .hero h1 .dim { color: var(--muted); }
+    @media (min-width: 640px) { .hero h1 { font-size: clamp(48px, 8vw, 88px); max-width: 15ch; } }
+    .hero-sub { margin-top: 24px; color: var(--muted); font-size: 17px; max-width: 58ch; text-wrap: pretty; }
+    @media (min-width: 640px) { .hero-sub { font-size: 19px; } }
+    .hero-cta { margin-top: 36px; display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 420px; }
+    @media (min-width: 640px) { .hero-cta { flex-direction: row; max-width: none; width: auto; } .hero-cta .btn { height: 48px; padding: 0 24px; } }
+    .hero-note { margin-top: 16px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+    /* ============ Telegram mockup ============ */
+    .tg-wrap { position: relative; margin-top: 64px; width: 100%; }
+    .tg-wrap::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 96px;
+      background: linear-gradient(180deg, transparent, var(--bg)); pointer-events: none;
+    }
+    .tg {
+      max-width: 940px; margin: 0 auto; text-align: left;
+      border: 1px solid var(--border-strong); border-bottom: 0;
+      border-radius: 14px 14px 0 0; background: #0E0F11; overflow: hidden;
+      box-shadow: 0 40px 120px -40px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.02);
+      display: grid; grid-template-columns: 1fr; text-align: left;
+    }
+    @media (min-width: 1024px) { .tg { grid-template-columns: 250px 1fr; } }
+    .tg-side { display: none; border-right: 1px solid var(--border); background: var(--surface); padding: 10px; }
+    @media (min-width: 1024px) { .tg-side { display: block; } }
+    .tg-search { height: 32px; border-radius: 16px; background: rgba(255,255,255,.05); margin-bottom: 8px; display: flex; align-items: center; padding: 0 12px; font-size: 13px; color: var(--muted); }
+    .tg-item { display: flex; gap: 10px; align-items: center; padding: 8px; border-radius: 10px; }
+    .tg-item.active { background: rgba(94,106,210,.2); }
+    .tg-item .ava { width: 40px; height: 40px; flex: none; }
+    .tg-item b { display: block; font-size: 14px; font-weight: 500; line-height: 1.3; }
+    .tg-item span { display: block; font-size: 12.5px; color: var(--muted); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+    .ava {
+      border-radius: 50%; display: grid; place-items: center; font-weight: 600; color: #fff; font-size: 15px;
+      background: linear-gradient(135deg, #3B4399, #5E6AD2);
+    }
+    .ava.gray { background: #26282C; color: var(--muted); }
+    .tg-main { display: flex; flex-direction: column; min-width: 0; }
+    .tg-head { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--surface); }
+    .tg-head .ava { width: 38px; height: 38px; }
+    .tg-head b { display: block; font-size: 15px; font-weight: 500; line-height: 1.25; }
+    .tg-head span { display: block; font-size: 12.5px; color: var(--muted); line-height: 1.25; }
+    .tg-feed { padding: 20px 14px 28px; display: flex; flex-direction: column; gap: 8px; background: #0B0C0D; }
+    @media (min-width: 640px) { .tg-feed { padding: 24px 24px 36px; } }
+    .msg { max-width: min(100%, 440px); padding: 8px 12px 6px; border-radius: 14px; font-size: 14.5px; line-height: 1.45; position: relative; }
+    .msg.in { align-self: flex-start; background: #17181B; border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+    .msg.out { align-self: flex-end; background: #2B3170; border: 1px solid rgba(139,147,248,.25); border-bottom-right-radius: 4px; }
+    .msg .time { display: block; text-align: right; font-family: var(--mono); font-size: 10.5px; color: rgba(255,255,255,.45); margin-top: 2px; }
+    .msg .link { font-family: var(--mono); font-size: 13px; color: #B7BDFB; word-break: break-all; }
+    .preview { margin-top: 8px; padding-left: 10px; border-left: 2px solid var(--accent-2); }
+    .preview small { display: block; font-size: 12px; color: #B7BDFB; font-weight: 500; }
+    .preview strong { display: block; font-size: 13.5px; font-weight: 500; line-height: 1.35; margin-top: 1px; }
+    .preview .thumb {
+      margin-top: 8px; aspect-ratio: 16/9; border-radius: 8px; position: relative; overflow: hidden;
+      background: linear-gradient(135deg, #1B1D22, #0F1011);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .preview .thumb .dur { position: absolute; right: 6px; bottom: 6px; font-family: var(--mono); font-size: 10.5px; background: rgba(0,0,0,.75); padding: 1px 5px; border-radius: 4px; }
+    .preview .thumb .play { position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; transform: translate(-50%,-50%); border-radius: 50%; background: rgba(255,255,255,.14); display: grid; place-items: center; }
+    .status { font-family: var(--mono); font-size: 12.5px; margin-top: 6px; display: grid; gap: 3px; color: var(--muted); }
+    .status li { display: flex; justify-content: space-between; gap: 24px; }
+    .status li span:first-child::before { content: "✓ "; color: var(--accent-2); }
+    .status li.run span:first-child::before { content: "… "; color: var(--muted); }
+    .msg.clips { width: 100%; max-width: 480px; padding: 8px 8px 6px; }
+    .msg.clips > p { padding: 2px 6px 8px; }
+    .clip-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .kb { align-self: flex-start; width: 100%; max-width: 480px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: -2px; }
+    .kb span { display: grid; place-items: center; text-align: center; padding: 8px 10px; font-size: 13px; font-weight: 500; border-radius: 8px; background: rgba(255,255,255,.07); border: 1px solid var(--border); }
+    .kb span:first-child { grid-column: 1 / -1; }
+    .tg-input { display: none; }
+
+    /* ============ Vertical clip preview (pure CSS) ============ */
+    .clip {
+      container-type: inline-size;
+      position: relative; aspect-ratio: 9 / 16; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(180deg, var(--c1, #23262C) 0%, var(--c2, #111214) 100%);
+      border: 1px solid rgba(255,255,255,.1);
+    }
+    .clip::before { /* speaker head */
+      content: ""; position: absolute; left: 50%; top: 24%; width: 30cqw; height: 30cqw; transform: translateX(-50%);
+      border-radius: 50%; background: linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,.08));
+    }
+    .clip::after { /* shoulders */
+      content: ""; position: absolute; left: 50%; top: 50%; width: 76cqw; height: 60cqw; transform: translateX(-50%);
+      border-radius: 50% 50% 0 0; background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.04));
+    }
+    .clip-dur { position: absolute; z-index: 2; left: 6cqw; top: 6cqw; font-family: var(--mono); font-size: max(9px, 7.5cqw); background: rgba(0,0,0,.6); padding: .15em .5em; border-radius: 4px; }
+    .clip-tag { position: absolute; z-index: 2; right: 6cqw; top: 6cqw; font-family: var(--mono); font-size: max(9px, 7.5cqw); color: rgba(255,255,255,.7); }
+    .clip-cap {
+      position: absolute; z-index: 2; left: 6cqw; right: 6cqw; bottom: 16cqw; text-align: center;
+      font-weight: 600; font-size: 11cqw; line-height: 1.1; letter-spacing: -0.02em; text-transform: uppercase;
+      text-shadow: 0 2px 0 rgba(0,0,0,.6);
+    }
+    .clip-cap b { font-weight: 600; color: var(--accent-2); }
+    .clip-bar { position: absolute; z-index: 2; left: 6cqw; right: 6cqw; bottom: 7cqw; height: 2px; background: rgba(255,255,255,.2); border-radius: 2px; }
+    .clip-bar i { display: block; height: 100%; width: var(--p, 40%); background: #fff; border-radius: 2px; }
+    .clip.v2 { --c1: #1E2127; --c2: #0E0F11; }
+    .clip.v3 { --c1: #272A30; --c2: #121315; }
+
+    /* ============ Social proof ============ */
+    .proof-line { text-align: center; color: var(--muted); font-size: 15px; margin-bottom: 32px; }
+    .proof-line b { color: var(--text); font-weight: 500; }
+    .stats { display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    @media (min-width: 640px) { .stats { grid-template-columns: repeat(3, 1fr); } }
+    .stat { background: var(--surface); padding: 32px 28px; }
+    .stat .num { font-family: var(--mono); font-weight: 500; font-size: clamp(40px, 5vw, 56px); letter-spacing: -0.04em; line-height: 1; }
+    .stat p { margin-top: 12px; color: var(--muted); font-size: 15px; }
+    #proof { padding: 56px 0; }
+
+    /* ============ Steps ============ */
+    .steps { display: grid; gap: 32px; position: relative; }
+    @media (min-width: 1024px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 32px; } }
+    .step { position: relative; display: grid; grid-template-columns: 40px 1fr; column-gap: 20px; }
+    .step .ico { grid-row: span 3; }
+    @media (min-width: 1024px) { .step { display: block; } .step .ico { margin-bottom: 24px; } }
+    .ico {
+      width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border-strong);
+      background: var(--surface); display: grid; place-items: center; color: var(--text); position: relative; z-index: 1;
+    }
+    .step .n { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .step h3 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.3; }
+    .step p { margin-top: 8px; color: var(--muted); font-size: 15px; max-width: 36ch; }
+    .connector { position: absolute; background: linear-gradient(90deg, var(--border-strong), rgba(139,147,248,.55)); transition: transform .6s ease-out .3s; }
+    /* mobile: vertical */
+    .connector { left: 20px; top: 48px; bottom: -24px; width: 1px; background: linear-gradient(180deg, var(--border-strong), rgba(139,147,248,.55)); transform-origin: top; transform: scaleY(0); }
+    .step:last-child .connector { display: none; }
+    .js .step.in .connector { transform: scaleY(1); }
+    html:not(.js) .connector { transform: none; }
+    @media (min-width: 1024px) {
+      .connector { left: 56px; right: -16px; top: 20px; bottom: auto; width: auto; height: 1px; background: linear-gradient(90deg, var(--border-strong), rgba(139,147,248,.55)); transform-origin: left; transform: scaleX(0); }
+      .js .step.in .connector { transform: scaleX(1); }
+    }
+
+    /* ============ Features ============ */
+    .features { display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    @media (min-width: 640px) { .features { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .features { grid-template-columns: repeat(3, 1fr); } }
+    .feature { background: var(--surface); padding: 28px; }
+    .feature svg { width: 18px; height: 18px; color: var(--muted); margin-bottom: 20px; }
+    .feature h3 { font-size: 17px; font-weight: 600; letter-spacing: -0.02em; }
+    .feature p { margin-top: 6px; color: var(--muted); font-size: 15px; }
+
+    /* ============ Demo ============ */
+    .demo-grid { display: grid; gap: 24px; }
+    @media (min-width: 1024px) { .demo-grid { grid-template-columns: 1.55fr 1fr; gap: 32px; align-items: start; } }
+    .panel-label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+    .player { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border-strong); background: #0B0C0D; }
+    .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .player-facade {
+      position: absolute; inset: 0; width: 100%; border: 0; padding: 0; text-align: left;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,.7) 100%),
+        linear-gradient(135deg, #1A1C21, #0D0E10);
+      color: var(--text);
+    }
+    .player-facade .play {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+      transition: background-color .2s ease-out;
+    }
+    .player-facade:hover .play { background: rgba(255,255,255,.2); }
+    .player-facade .ttl { position: absolute; left: 16px; right: 16px; bottom: 14px; font-size: 14px; font-weight: 500; }
+    .player-facade .ttl span { display: block; font-family: var(--mono); font-size: 12px; color: var(--muted); font-weight: 400; margin-top: 2px; }
+    .shorts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .short-meta { margin-top: 8px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); display: flex; justify-content: space-between; gap: 4px; }
+    .demo-caption { margin-top: 32px; color: var(--muted); font-size: 15px; display: flex; gap: 12px; align-items: baseline; }
+    .demo-caption::before { content: ""; width: 24px; height: 1px; background: var(--border-strong); flex: none; transform: translateY(-4px); }
+    .demo-caption b { color: var(--text); font-weight: 500; }
+
+    /* ============ Pricing ============ */
+    .plans { display: grid; gap: 16px; }
+    @media (min-width: 1024px) { .plans { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+    .plan { position: relative; display: flex; flex-direction: column; padding: 28px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+    .plan.popular { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(94,106,210,.35), 0 24px 60px -30px rgba(94,106,210,.45); }
+    .plan .pop-badge { position: absolute; top: -11px; left: 24px; font-family: var(--mono); font-size: 11px; color: #fff; background: var(--accent); padding: 2px 10px; border-radius: 999px; letter-spacing: .02em; }
+    .plan h3 { font-size: 15px; font-weight: 500; color: var(--muted); }
+    .price { display: flex; align-items: baseline; gap: 6px; margin-top: 12px; }
+    .price b { font-family: var(--mono); font-weight: 500; font-size: 48px; letter-spacing: -0.05em; line-height: 1; }
+    .price span { color: var(--muted); font-size: 14px; }
+    .plan-desc { margin-top: 12px; color: var(--muted); font-size: 14.5px; min-height: 3em; }
+    .plan ul { margin: 24px 0 28px; padding-top: 24px; border-top: 1px solid var(--border); display: grid; gap: 12px; flex: 1; align-content: start; }
+    .plan li { display: flex; gap: 10px; font-size: 15px; align-items: flex-start; }
+    .plan li svg { width: 16px; height: 16px; margin-top: 4px; flex: none; color: var(--muted); }
+    .plan.popular li svg { color: var(--accent-2); }
+
+    .service {
+      margin-top: 20px; padding: 28px; border: 1px solid var(--border); border-radius: var(--radius);
+      background: var(--surface); display: grid; gap: 24px; align-items: center;
+    }
+    @media (min-width: 1024px) { .service { grid-template-columns: 1fr auto; padding: 32px 36px; gap: 48px; } }
+    .service h3 { font-size: 24px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.2; }
+    .service p { margin-top: 8px; color: var(--muted); font-size: 15.5px; max-width: 60ch; }
+    .service .from { font-family: var(--mono); font-size: 13px; color: var(--muted); margin-top: 14px; }
+    .service .from b { font-size: 20px; font-weight: 500; color: var(--text); letter-spacing: -0.03em; }
+    .service-act { display: grid; }
+    @media (min-width: 640px) { .service-act { justify-items: start; } }
+
+    /* ============ FAQ ============ */
+    .faq { border-top: 1px solid var(--border); max-width: 820px; }
+    .faq details { border-bottom: 1px solid var(--border); }
+    .faq summary {
+      list-style: none; cursor: pointer; padding: 22px 0; display: flex; justify-content: space-between; gap: 24px; align-items: center;
+      font-size: 17px; font-weight: 500; letter-spacing: -0.01em; transition: color .2s ease-out;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary:hover { color: #fff; }
+    .faq summary .pm { position: relative; width: 14px; height: 14px; flex: none; color: var(--muted); }
+    .faq summary .pm::before, .faq summary .pm::after { content: ""; position: absolute; left: 0; top: 6.5px; width: 14px; height: 1px; background: currentColor; transition: opacity .2s ease-out; }
+    .faq summary .pm::after { transform: rotate(90deg); }
+    .faq details[open] summary .pm::after { opacity: 0; }
+    .faq .ans { padding: 0 40px 24px 0; color: var(--muted); font-size: 15.5px; max-width: 64ch; }
+
+    /* ============ Final CTA ============ */
+    .final { text-align: center; position: relative; overflow: hidden; }
+    .final::before { content: ""; position: absolute; left: 50%; bottom: -260px; width: 800px; height: 400px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(94,106,210,.12), transparent); pointer-events: none; }
+    .final .container { position: relative; display: flex; flex-direction: column; align-items: center; }
+    .final h2 { font-size: clamp(36px, 6.5vw, 72px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.04; max-width: 14ch; text-wrap: balance; }
+    .final .btn { margin-top: 40px; }
+    .final .hero-note { margin-top: 20px; }
+
+    /* ============ Footer ============ */
+    .footer { border-top: 1px solid var(--border); padding: 48px 0 40px; }
+    .footer-top { display: grid; gap: 28px; }
+    @media (min-width: 1024px) { .footer-top { grid-template-columns: 1fr auto; align-items: start; } }
+    .footer nav ul { display: flex; flex-wrap: wrap; gap: 12px 28px; }
+    .footer nav a { color: var(--muted); font-size: 14px; transition: color .2s ease-out; }
+    .footer nav a:hover { color: var(--text); }
+    .footer .stub::after { content: "soon"; font-family: var(--mono); font-size: 10px; margin-left: 6px; padding: 1px 6px; border: 1px solid var(--border-strong); border-radius: 999px; color: var(--muted); }
+    .footer-bottom { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); display: grid; gap: 8px; font-size: 13px; color: var(--muted); }
+    @media (min-width: 640px) { .footer-bottom { grid-template-columns: 1fr auto; } }
+
+    /* ============ Reveal (fade only) ============ */
+    .js .reveal { opacity: 0; transition: opacity .6s ease-out; }
+    .js .reveal.in { opacity: 1; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .js .reveal { opacity: 1; transition: none; }
+      .connector { transition: none; }
+      .js .step .connector { transform: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#main" data-i18n="skip">Перейти к содержимому</a>
+
+  <!-- ============ 1. HEADER ============ -->
+  <header class="header" id="header">
+    <div class="container">
+      <a class="logo" href="#top" aria-label="Remtex Shorts">
+        <span class="logo-mark" aria-hidden="true">R</span>
+        <span>Remtex Shorts</span>
+      </a>
+      <nav class="nav" data-i18n-aria="nav.aria" aria-label="Основная навигация">
+        <div class="lang" role="group" data-i18n-aria="lang.aria" aria-label="Язык">
+          <button type="button" data-lang="ru" aria-pressed="true">RU</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <a class="nav-link" href="#pricing" data-i18n="nav.pricing">Цены</a>
+        <a class="btn btn-primary btn-sm" href="https://t.me/remtex_shorts_ai_bot" target="_blank" rel="noopener">
+          <span class="cta-long" data-i18n="nav.cta">Открыть в Telegram</span>
+          <span class="cta-short" data-i18n="nav.ctaShort">Telegram</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ 2. HERO ============ -->
+    <section class="hero" id="top">
+      <div class="container hero-inner">
+        <p class="badge reveal"><i aria-hidden="true"></i><span data-i18n="hero.badge">Работает прямо в Telegram · Без монтажа · Без Premiere</span></p>
+        <h1 class="reveal" data-i18n-html="hero.title">Из одного видео — три вирусных Shorts. <span class="dim">За две минуты.</span></h1>
+        <p class="hero-sub reveal" data-i18n="hero.sub">Пришлите ссылку на YouTube-видео или файл в Telegram-бот. AI найдёт самые сильные моменты, нарежет их в вертикальный формат, добавит субтитры и вернёт готовые клипы в чат.</p>
+        <div class="hero-cta reveal">
+          <a class="btn btn-primary" href="https://t.me/remtex_shorts_ai_bot" target="_blank" rel="noopener" data-i18n="hero.cta1">Попробовать бесплатно в Telegram</a>
+          <a class="btn btn-ghost" href="#demo" data-i18n="hero.cta2">Смотреть как работает</a>
+        </div>
+        <p class="hero-note reveal" data-i18n="hero.note">Бесплатно · 3 видео в месяц · Без карты</p>
+
+        <!-- Telegram chat mockup (HTML/CSS) -->
+        <figure class="tg-wrap reveal" role="img" data-i18n-aria="tg.aria" aria-label="Диалог в Telegram: пользователь отправил ссылку на видео, бот прислал три готовых вертикальных клипа">
+          <div class="tg" aria-hidden="true">
+            <aside class="tg-side">
+              <div class="tg-search" data-i18n="tg.search">Поиск</div>
+              <div class="tg-item"><div class="ava gray">★</div><div><b data-i18n="tg.saved">Избранное</b><span data-i18n="tg.savedSub">Заметки для себя</span></div></div>
+              <div class="tg-item active"><div class="ava">R</div><div><b>Remtex Shorts</b><span data-i18n="tg.sideSub">Готово: 3 клипа</span></div></div>
+              <div class="tg-item"><div class="ava gray">Т</div><div><b data-i18n="tg.team">Команда</b><span data-i18n="tg.teamSub">Завтра созвон в 11:00</span></div></div>
+            </aside>
+            <div class="tg-main">
+              <div class="tg-head">
+                <div class="ava">R</div>
+                <div><b>Remtex Shorts</b><span data-i18n="tg.status">бот</span></div>
+              </div>
+              <div class="tg-feed">
+                <div class="msg out">
+                  <span class="link">youtu.be/Xk2f9aQ_L0c</span>
+                  <div class="preview">
+                    <small>YouTube</small>
+                    <strong data-i18n="tg.vidTitle">Ремонт духовки: почему не греет — полный разбор</strong>
+                    <div class="thumb"><span class="play"><svg width="12" height="12" viewBox="0 0 12 12" fill="#fff"><path d="M3 1.5v9l7.5-4.5z"/></svg></span><span class="dur">24:18</span></div>
+                  </div>
+                  <span class="time">14:02</span>
+                </div>
+                <div class="msg in">
+                  <span data-i18n="tg.m1">Принял видео. Анализирую транскрипт.</span>
+                  <ul class="status">
+                    <li><span data-i18n="tg.s1">транскрипт</span><span>0:14</span></li>
+                    <li><span data-i18n="tg.s2">поиск моментов (7)</span><span>0:41</span></li>
+                    <li><span data-i18n="tg.s3">рендер 9:16 + субтитры</span><span>1:52</span></li>
+                  </ul>
+                  <span class="time">14:04</span>
+                </div>
+                <div class="msg in clips">
+                  <p data-i18n="tg.m2">Готово. 3 клипа, 9:16, субтитры RU.</p>
+                  <div class="clip-row">
+                    <div class="clip"><span class="clip-dur">0:42</span><div class="clip-cap" data-i18n-html="clip1">Печь <b>не греет?</b></div><div class="clip-bar"><i style="--p:35%"></i></div></div>
+                    <div class="clip v2"><span class="clip-dur">0:38</span><div class="clip-cap" data-i18n-html="clip2">Проверь ТЭН <b>за 30 сек</b></div><div class="clip-bar"><i style="--p:60%"></i></div></div>
+                    <div class="clip v3"><span class="clip-dur">0:51</span><div class="clip-cap" data-i18n-html="clip3">Эту ошибку <b>делают все</b></div><div class="clip-bar"><i style="--p:20%"></i></div></div>
+                  </div>
+                  <span class="time">14:04</span>
+                </div>
+                <div class="kb">
+                  <span data-i18n="tg.b1">Опубликовать в YouTube Shorts</span>
+                  <span data-i18n="tg.b2">Скачать все</span>
+                  <span data-i18n="tg.b3">Перевести (5 языков)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ 3. SOCIAL PROOF ============ -->
+    <section class="section" id="proof" aria-labelledby="proof-title">
+      <div class="container">
+        <p class="proof-line reveal" id="proof-title" data-i18n-html="proof.line">Используется авторами с суммарным охватом <b class="mono">2M+</b> просмотров</p>
+        <div class="stats reveal">
+          <div class="stat"><div class="num accent-text">217K</div><p data-i18n="proof.s1">просмотров на одном Shorts</p></div>
+          <div class="stat"><div class="num accent-text">5</div><p data-i18n="proof.s2">языков локализации</p></div>
+          <div class="stat"><div class="num accent-text">&lt; 2<span style="font-size:.5em;letter-spacing:0;margin-left:.2em" data-i18n="proof.min">мин</span></div><p data-i18n="proof.s3">на обработку видео</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 4. HOW IT WORKS ============ -->
+    <section class="section" id="how" aria-labelledby="how-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow" data-i18n="how.eyebrow">Как это работает</p>
+          <h2 class="h2" id="how-title" data-i18n="how.title">Три шага. Ни одного таймлайна.</h2>
+        </div>
+        <ol class="steps">
+          <li class="step reveal">
+            <span class="connector" aria-hidden="true"></span>
+            <div class="ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 10.5a3 3 0 0 0 4.2 0l2.6-2.6a3 3 0 0 0-4.2-4.2l-.8.8"/><path d="M10.5 7.5a3 3 0 0 0-4.2 0L3.7 10.1a3 3 0 0 0 4.2 4.2l.8-.8"/></svg></div>
+            <span class="n">01</span>
+            <h3 data-i18n="step1.t">Отправь видео</h3>
+            <p data-i18n="step1.d">Ссылка на YouTube или файл прямо в Telegram-чат.</p>
+          </li>
+          <li class="step reveal" data-delay="120">
+            <span class="connector" aria-hidden="true"></span>
+            <div class="ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="8" height="14" rx="2"/><path d="M7.5 12.5h3"/></svg></div>
+            <span class="n">02</span>
+            <h3 data-i18n="step2.t">AI нарезает и озвучивает</h3>
+            <p data-i18n="step2.d">Находит яркие моменты, режет вертикально, добавляет субтитры и переводит на 5 языков.</p>
+          </li>
+          <li class="step reveal" data-delay="240">
+            <span class="connector" aria-hidden="true"></span>
+            <div class="ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 9.5l3.5 3.5 7.5-8"/></svg></div>
+            <span class="n">03</span>
+            <h3 data-i18n="step3.t">Публикуй или скачивай</h3>
+            <p data-i18n="step3.d">Готовые клипы возвращаются в чат. Один клик — и они в YouTube Shorts, Reels, TikTok.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ 5. FEATURES ============ -->
+    <section class="section" id="features" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow" data-i18n="feat.eyebrow">Возможности</p>
+          <h2 class="h2" id="features-title" data-i18n="feat.title">Всё, что нужно для роста через Shorts.</h2>
+        </div>
+        <div class="features reveal">
+          <article class="feature">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5h11M2.5 8h6.5M2.5 11.5h9"/></svg>
+            <h3 data-i18n="f1.t">Умная нарезка</h3><p data-i18n="f1.d">AI находит самые цепляющие моменты по транскрипту.</p>
+          </article>
+          <article class="feature">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="12" height="10" rx="2"/><path d="M5 10h6"/></svg>
+            <h3 data-i18n="f2.t">Авто-субтитры</h3><p data-i18n="f2.d">Раскадровка в стиле Alex Hormozi, 30+ стилей на выбор.</p>
+          </article>
+          <article class="feature">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2c2 2 2.5 4 2.5 6S10 12 8 14c-2-2-2.5-4-2.5-6S6 4 8 2z"/></svg>
+            <h3 data-i18n="f3.t">Локализация</h3><p data-i18n="f3.d">Озвучка и субтитры на RU/EN/ES/PT/PL одним кликом.</p>
+          </article>
+          <article class="feature">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 11V3M5 6l3-3 3 3M3 13h10"/></svg>
+            <h3 data-i18n="f4.t">Автопубликация</h3><p data-i18n="f4.d">Прямая загрузка в YouTube Shorts по расписанию.</p>
+          </article>
+          <article class="feature">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="12" height="11" rx="2"/><path d="M2 7h12M5.5 1.5v3M10.5 1.5v3"/></svg>
+            <h3 data-i18n="f5.t">Сезонный интеллект</h3><p data-i18n="f5.d">Знает, когда публиковать ремонт печей, а когда — кондиционеров.</p>
+          </article>
+          <article class="feature">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.5s4.5 4.5 4.5 8A4.5 4.5 0 0 1 3.5 9.5c0-3.5 4.5-8 4.5-8z"/></svg>
+            <h3 data-i18n="f6.t">Без водяных знаков</h3><p data-i18n="f6.d">На платных тарифах — чистый результат.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 6. DEMO ============ -->
+    <section class="section" id="demo" aria-labelledby="demo-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow" data-i18n="demo.eyebrow">Демо</p>
+          <h2 class="h2" id="demo-title" data-i18n="demo.title">Было длинное видео. Стало три клипа.</h2>
+        </div>
+        <div class="demo-grid">
+          <div class="reveal">
+            <div class="panel-label"><span data-i18n="demo.src">ИСХОДНИК</span><span>24:18 · 16:9</span></div>
+            <div class="player" id="player" data-video-id="jNQXAC9IVRM">
+              <button class="player-facade" type="button" id="playBtn" data-i18n-aria="demo.play" aria-label="Воспроизвести видео">
+                <span class="play" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 12 12" fill="#fff"><path d="M3 1.5v9l7.5-4.5z"/></svg></span>
+                <span class="ttl"><span style="font-family:var(--font);font-size:14px;color:var(--text);margin:0" data-i18n="tg.vidTitle">Ремонт духовки: почему не греет — полный разбор</span><span>@remont_texnika</span></span>
+              </button>
+            </div>
+          </div>
+          <div class="reveal" data-delay="120">
+            <div class="panel-label"><span data-i18n="demo.out">РЕЗУЛЬТАТ</span><span>3 × 9:16</span></div>
+            <div class="shorts">
+              <div>
+                <div class="clip"><span class="clip-dur">0:42</span><div class="clip-cap" data-i18n-html="clip1">Печь <b>не греет?</b></div><div class="clip-bar"><i style="--p:35%"></i></div></div>
+                <div class="short-meta"><span>02:10</span><span>217K</span></div>
+              </div>
+              <div>
+                <div class="clip v2"><span class="clip-dur">0:38</span><div class="clip-cap" data-i18n-html="clip2">Проверь ТЭН <b>за 30 сек</b></div><div class="clip-bar"><i style="--p:60%"></i></div></div>
+                <div class="short-meta"><span>09:47</span><span>48K</span></div>
+              </div>
+              <div>
+                <div class="clip v3"><span class="clip-dur">0:51</span><div class="clip-cap" data-i18n-html="clip3">Эту ошибку <b>делают все</b></div><div class="clip-bar"><i style="--p:20%"></i></div></div>
+                <div class="short-meta"><span>17:30</span><span>31K</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="demo-caption reveal" data-i18n-html="demo.caption"><span><b>Одно исходное видео → три готовых клипа.</b> Реальный результат с канала @remont_texnika</span></p>
+      </div>
+    </section>
+
+    <!-- ============ 7. PRICING ============ -->
+    <section class="section" id="pricing" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow" data-i18n="price.eyebrow">Цены</p>
+          <h2 class="h2" id="pricing-title" data-i18n="price.title">Начните бесплатно. Платите, когда растёте.</h2>
+        </div>
+        <div class="plans">
+          <article class="plan reveal">
+            <h3>Free</h3>
+            <div class="price"><b>$0</b><span data-i18n="price.mo0">навсегда</span></div>
+            <p class="plan-desc" data-i18n="free.d">Чтобы попробовать и оценить качество.</p>
+            <ul>
+              <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg><span data-i18n="free.1">3 видео в месяц</span></li>
+              <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg><span data-i18n="free.2">1 Shorts с видео</span></li>
+              <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg><span data-i18n="free.3">С водяным знаком</span></li>
+            </ul>
+            <a class="btn btn-ghost btn-block" href="https://t.me/remtex_shorts_ai_bot" target="_blank" rel="noopener" data-i18n="free.cta">Начать бесплатно</a>
+          </article>
+
+          <article class="plan popular reveal" data-delay="100">
+            <span class="pop-badge" data-i18n="price.pop">Популярный</span>
+            <h3>Creator</h3>
+            <div class="price"><b class="accent-text">$9</b><span data-i18n="price.mo">/мес</span></div>
+            <p class="plan-desc" data-i18n="cr.d">Для авторов, которые публикуют регулярно.</p>
+            <ul>
+              <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg><span data-i18n="cr.1">30 видео в месяц</span></li>
+              <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg><span data-i18n="cr.2">3 Shorts с каждого видео</span></li>
+              <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg><span data-i18n="cr.3">Без водяного знака</span></li>
+              <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg><span data-i18n="cr.4">Автопубликация</span></li>
+            </ul>
+            <a class="btn btn-primary btn-block" href="https://t.me/remtex_shorts_ai_bot" target="_blank" rel="noopener" data-i18n="cr.cta">Выбрать Creator</a>
+          </article>
+
+          <article class="plan reveal" data-delay="200">
+            <h3>Studio</h3>
+            <div class="price"><b>$29</b><span data-i18n="price.mo">/мес</span></div>
+            <p class="plan-desc" data-i18n="st.d">Для студий и авторов с несколькими каналами.</p>
+            <ul>
+              <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg><span data-i18n="st.1">Безлимит видео</span></li>
+              <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg><span data-i18n="st.2">Доступ к API</span></li>
+              <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg><span data-i18n="st.3">Мультиканал</span></li>
+              <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg><span data-i18n="st.4">Всё из Creator</span></li>
+            </ul>
+            <a class="btn btn-ghost btn-block" href="https://t.me/remtex_shorts_ai_bot" target="_blank" rel="noopener" data-i18n="st.cta">Выбрать Studio</a>
+          </article>
+        </div>
+
+        <div class="service reveal">
+          <div>
+            <h3 data-i18n="svc.t">Не хотите разбираться сами?</h3>
+            <p data-i18n="svc.d">Ведение канала под ключ: стратегия, нарезка, субтитры, публикация и аналитика. Вы снимаете — мы растим канал.</p>
+            <p class="from"><span data-i18n="svc.from">от</span> <b>$499</b><span data-i18n="price.mo">/мес</span></p>
+          </div>
+          <div class="service-act">
+            <a class="btn btn-ghost btn-lg" href="https://t.me/remtex_shorts_ai_bot?start=turnkey" target="_blank" rel="noopener" data-i18n="svc.cta">Оставить заявку</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 8. FAQ ============ -->
+    <section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow" data-i18n="faq.eyebrow">FAQ</p>
+          <h2 class="h2" id="faq-title" data-i18n="faq.title">Частые вопросы</h2>
+        </div>
+        <div class="faq reveal">
+          <details><summary><span data-i18n="q1">Как работает бесплатный тариф?</span><span class="pm" aria-hidden="true"></span></summary><div class="ans" data-i18n="a1">Вы получаете 3 видео в месяц, по одному Shorts с каждого. Клипы выходят с водяным знаком. Карта не нужна, лимит обновляется каждый месяц.</div></details>
+          <details><summary><span data-i18n="q2">Нужен ли монтаж?</span><span class="pm" aria-hidden="true"></span></summary><div class="ans" data-i18n="a2">Нет. Бот сам выбирает моменты, кадрирует под 9:16, ставит субтитры и собирает клип. Premiere, CapCut и таймлайн не нужны. Если хочется иначе, выберите другой момент или стиль субтитров.</div></details>
+          <details><summary><span data-i18n="q3">Какие языки поддерживаются?</span><span class="pm" aria-hidden="true"></span></summary><div class="ans" data-i18n="a3">Озвучка и субтитры доступны на русском, английском, испанском, португальском и польском. Один клик — и клип локализован для новой аудитории.</div></details>
+          <details><summary><span data-i18n="q4">Можно ли использовать свои файлы?</span><span class="pm" aria-hidden="true"></span></summary><div class="ans" data-i18n="a4">Да. Отправьте в чат ссылку на YouTube или сам видеофайл. Для больших файлов надёжнее ссылка — на YouTube (в том числе «по ссылке») или в облако.</div></details>
+          <details><summary><span data-i18n="q5">Чем отличается от Opus Clip?</span><span class="pm" aria-hidden="true"></span></summary><div class="ans" data-i18n="a5">Всё работает внутри Telegram: без веб-редактора и лишних экранов. Добавлены локализация на 5 языков, автопубликация, сезонный интеллект (когда выкладывать печи, а когда кондиционеры) и опция «канал под ключ». Продукт сделан практикующим YouTube-автором.</div></details>
+          <details><summary><span data-i18n="q6">Как отменить подписку?</span><span class="pm" aria-hidden="true"></span></summary><div class="ans" data-i18n="a6">В один клик в настройках бота. Доступ сохраняется до конца оплаченного периода, никаких писем в поддержку.</div></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 9. FINAL CTA ============ -->
+    <section class="section final" aria-labelledby="final-title">
+      <div class="container">
+        <h2 id="final-title" class="reveal" data-i18n="final.title">Первый Shorts — через 2 минуты.</h2>
+        <a class="btn btn-primary btn-lg reveal" href="https://t.me/remtex_shorts_ai_bot" target="_blank" rel="noopener" data-i18n="final.cta">Открыть в Telegram</a>
+        <p class="hero-note reveal" data-i18n="final.note">Бесплатно · Без карты · Отмена в один клик</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ 10. FOOTER ============ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <a class="logo" href="#top" aria-label="Remtex Shorts">
+          <span class="logo-mark" aria-hidden="true">R</span><span>Remtex Shorts</span>
+        </a>
+        <nav data-i18n-aria="foot.aria" aria-label="Footer">
+          <ul>
+            <li><a href="#pricing" data-i18n="foot.pricing">Ценообразование</a></li>
+            <li><a href="#" class="stub" data-i18n="foot.docs">Документация</a></li>
+            <li><a href="https://remtex.github.io/privacy" target="_blank" rel="noopener" data-i18n="foot.privacy">Политика конфиденциальности</a></li>
+            <li><a href="https://t.me/remtex_shorts_ai_bot" target="_blank" rel="noopener" data-i18n="foot.contacts">Контакты</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p data-i18n="foot.made">Сделано практикующим YouTube-автором, а не маркетологами.</p>
+        <p class="mono">© <span id="year">2026</span> Remtex Shorts</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ---------- Translations ---------- */
+      var translations = {
+        ru: {
+          'meta.title': 'Remtex Shorts — из одного видео три Shorts за две минуты',
+          'meta.desc': 'Remtex Shorts превращает длинные YouTube-видео в вертикальные Shorts с субтитрами и публикует их автоматически. Работает прямо в Telegram.',
+          'skip': 'Перейти к содержимому',
+          'nav.aria': 'Основная навигация', 'lang.aria': 'Язык',
+          'nav.pricing': 'Цены', 'nav.cta': 'Открыть в Telegram', 'nav.ctaShort': 'Telegram',
+
+          'hero.badge': 'Работает прямо в Telegram · Без монтажа · Без Premiere',
+          'hero.title': 'Из одного видео — три вирусных Shorts. <span class="dim">За две минуты.</span>',
+          'hero.sub': 'Пришлите ссылку на YouTube-видео или файл в Telegram-бот. AI найдёт самые сильные моменты, нарежет их в вертикальный формат, добавит субтитры и вернёт готовые клипы в чат.',
+          'hero.cta1': 'Попробовать бесплатно в Telegram', 'hero.cta2': 'Смотреть как работает',
+          'hero.note': 'Бесплатно · 3 видео в месяц · Без карты',
+
+          'tg.aria': 'Диалог в Telegram: пользователь отправил ссылку на видео, бот прислал три готовых вертикальных клипа',
+          'tg.search': 'Поиск', 'tg.saved': 'Избранное', 'tg.savedSub': 'Заметки для себя',
+          'tg.sideSub': 'Готово: 3 клипа', 'tg.team': 'Команда', 'tg.teamSub': 'Завтра созвон в 11:00',
+          'tg.status': 'бот',
+          'tg.vidTitle': 'Ремонт духовки: почему не греет — полный разбор',
+          'tg.m1': 'Принял видео. Анализирую транскрипт.',
+          'tg.s1': 'транскрипт', 'tg.s2': 'поиск моментов (7)', 'tg.s3': 'рендер 9:16 + субтитры',
+          'tg.m2': 'Готово. 3 клипа, 9:16, субтитры RU.',
+          'tg.b1': 'Опубликовать в YouTube Shorts', 'tg.b2': 'Скачать все', 'tg.b3': 'Перевести (5 языков)',
+          'clip1': 'Печь <b>не греет?</b>', 'clip2': 'Проверь ТЭН <b>за 30 сек</b>', 'clip3': 'Эту ошибку <b>делают все</b>',
+
+          'proof.line': 'Используется авторами с суммарным охватом <b class="mono">2M+</b> просмотров',
+          'proof.s1': 'просмотров на одном Shorts', 'proof.s2': 'языков локализации',
+          'proof.min': 'мин', 'proof.s3': 'на обработку видео',
+
+          'how.eyebrow': 'Как это работает', 'how.title': 'Три шага. Ни одного таймлайна.',
+          'step1.t': 'Отправь видео', 'step1.d': 'Ссылка на YouTube или файл прямо в Telegram-чат.',
+          'step2.t': 'AI нарезает и озвучивает', 'step2.d': 'Находит яркие моменты, режет вертикально, добавляет субтитры и переводит на 5 языков.',
+          'step3.t': 'Публикуй или скачивай', 'step3.d': 'Готовые клипы возвращаются в чат. Один клик — и они в YouTube Shorts, Reels, TikTok.',
+
+          'feat.eyebrow': 'Возможности', 'feat.title': 'Всё, что нужно для роста через Shorts.',
+          'f1.t': 'Умная нарезка', 'f1.d': 'AI находит самые цепляющие моменты по транскрипту.',
+          'f2.t': 'Авто-субтитры', 'f2.d': 'Раскадровка в стиле Alex Hormozi, 30+ стилей на выбор.',
+          'f3.t': 'Локализация', 'f3.d': 'Озвучка и субтитры на RU/EN/ES/PT/PL одним кликом.',
+          'f4.t': 'Автопубликация', 'f4.d': 'Прямая загрузка в YouTube Shorts по расписанию.',
+          'f5.t': 'Сезонный интеллект', 'f5.d': 'Знает, когда публиковать ремонт печей, а когда — кондиционеров.',
+          'f6.t': 'Без водяных знаков', 'f6.d': 'На платных тарифах — чистый результат.',
+
+          'demo.eyebrow': 'Демо', 'demo.title': 'Было длинное видео. Стало три клипа.',
+          'demo.src': 'ИСХОДНИК', 'demo.out': 'РЕЗУЛЬТАТ', 'demo.play': 'Воспроизвести видео',
+          'demo.caption': '<span><b>Одно исходное видео → три готовых клипа.</b> Реальный результат с канала @remont_texnika</span>',
+
+          'price.eyebrow': 'Цены', 'price.title': 'Начните бесплатно. Платите, когда растёте.',
+          'price.mo0': 'навсегда', 'price.mo': '/мес', 'price.pop': 'Популярный',
+          'free.d': 'Чтобы попробовать и оценить качество.',
+          'free.1': '3 видео в месяц', 'free.2': '1 Shorts с видео', 'free.3': 'С водяным знаком', 'free.cta': 'Начать бесплатно',
+          'cr.d': 'Для авторов, которые публикуют регулярно.',
+          'cr.1': '30 видео в месяц', 'cr.2': '3 Shorts с каждого видео', 'cr.3': 'Без водяного знака', 'cr.4': 'Автопубликация', 'cr.cta': 'Выбрать Creator',
+          'st.d': 'Для студий и авторов с несколькими каналами.',
+          'st.1': 'Безлимит видео', 'st.2': 'Доступ к API', 'st.3': 'Мультиканал', 'st.4': 'Всё из Creator', 'st.cta': 'Выбрать Studio',
+          'svc.t': 'Не хотите разбираться сами?',
+          'svc.d': 'Ведение канала под ключ: стратегия, нарезка, субтитры, публикация и аналитика. Вы снимаете — мы растим канал.',
+          'svc.from': 'от', 'svc.cta': 'Оставить заявку',
+
+          'faq.eyebrow': 'FAQ', 'faq.title': 'Частые вопросы',
+          'q1': 'Как работает бесплатный тариф?',
+          'a1': 'Вы получаете 3 видео в месяц, по одному Shorts с каждого. Клипы выходят с водяным знаком. Карта не нужна, лимит обновляется каждый месяц.',
+          'q2': 'Нужен ли монтаж?',
+          'a2': 'Нет. Бот сам выбирает моменты, кадрирует под 9:16, ставит субтитры и собирает клип. Premiere, CapCut и таймлайн не нужны. Если хочется иначе, выберите другой момент или стиль субтитров.',
+          'q3': 'Какие языки поддерживаются?',
+          'a3': 'Озвучка и субтитры доступны на русском, английском, испанском, португальском и польском. Один клик — и клип локализован для новой аудитории.',
+          'q4': 'Можно ли использовать свои файлы?',
+          'a4': 'Да. Отправьте в чат ссылку на YouTube или сам видеофайл. Для больших файлов надёжнее ссылка — на YouTube (в том числе «по ссылке») или в облако.',
+          'q5': 'Чем отличается от Opus Clip?',
+          'a5': 'Всё работает внутри Telegram: без веб-редактора и лишних экранов. Добавлены локализация на 5 языков, автопубликация, сезонный интеллект (когда выкладывать печи, а когда кондиционеры) и опция «канал под ключ». Продукт сделан практикующим YouTube-автором.',
+          'q6': 'Как отменить подписку?',
+          'a6': 'В один клик в настройках бота. Доступ сохраняется до конца оплаченного периода, никаких писем в поддержку.',
+
+          'final.title': 'Первый Shorts — через 2 минуты.', 'final.cta': 'Открыть в Telegram',
+          'final.note': 'Бесплатно · Без карты · Отмена в один клик',
+
+          'foot.aria': 'Футер', 'foot.pricing': 'Ценообразование', 'foot.docs': 'Документация',
+          'foot.privacy': 'Политика конфиденциальности', 'foot.contacts': 'Контакты',
+          'foot.made': 'Сделано практикующим YouTube-автором, а не маркетологами.'
+        },
+
+        en: {
+          'meta.title': 'Remtex Shorts — one long video, three Shorts, two minutes',
+          'meta.desc': 'Remtex Shorts turns long YouTube videos into vertical Shorts with captions and publishes them automatically. Works right inside Telegram.',
+          'skip': 'Skip to content',
+          'nav.aria': 'Main navigation', 'lang.aria': 'Language',
+          'nav.pricing': 'Pricing', 'nav.cta': 'Open in Telegram', 'nav.ctaShort': 'Telegram',
+
+          'hero.badge': 'Works right in Telegram · No editing · No Premiere',
+          'hero.title': 'One long video. Three viral Shorts. <span class="dim">Two minutes.</span>',
+          'hero.sub': 'Send a YouTube link or a file to the Telegram bot. AI finds the strongest moments, cuts them to vertical, adds captions and sends ready-to-post clips back to your chat.',
+          'hero.cta1': 'Try it free in Telegram', 'hero.cta2': 'See how it works',
+          'hero.note': 'Free · 3 videos a month · No card',
+
+          'tg.aria': 'Telegram chat: the user sent a video link and the bot replied with three ready vertical clips',
+          'tg.search': 'Search', 'tg.saved': 'Saved Messages', 'tg.savedSub': 'Notes to self',
+          'tg.sideSub': 'Done: 3 clips', 'tg.team': 'Team', 'tg.teamSub': 'Call tomorrow at 11:00',
+          'tg.status': 'bot',
+          'tg.vidTitle': 'Oven repair: why it won’t heat — full breakdown',
+          'tg.m1': 'Got it. Analyzing the transcript.',
+          'tg.s1': 'transcript', 'tg.s2': 'finding moments (7)', 'tg.s3': 'render 9:16 + captions',
+          'tg.m2': 'Done. 3 clips, 9:16, EN captions.',
+          'tg.b1': 'Publish to YouTube Shorts', 'tg.b2': 'Download all', 'tg.b3': 'Translate (5 languages)',
+          'clip1': 'Oven <b>not heating?</b>', 'clip2': 'Check the element <b>in 30 sec</b>', 'clip3': 'Everyone <b>makes this mistake</b>',
+
+          'proof.line': 'Used by creators with a combined reach of <b class="mono">2M+</b> views',
+          'proof.s1': 'views on a single Shorts', 'proof.s2': 'localization languages',
+          'proof.min': 'min', 'proof.s3': 'to process a video',
+
+          'how.eyebrow': 'How it works', 'how.title': 'Three steps. Zero timelines.',
+          'step1.t': 'Send a video', 'step1.d': 'A YouTube link or a file, right in the Telegram chat.',
+          'step2.t': 'AI cuts and dubs', 'step2.d': 'Finds the best moments, crops to vertical, adds captions and translates into 5 languages.',
+          'step3.t': 'Publish or download', 'step3.d': 'Finished clips come back to the chat. One click sends them to YouTube Shorts, Reels, TikTok.',
+
+          'feat.eyebrow': 'Features', 'feat.title': 'Everything you need to grow with Shorts.',
+          'f1.t': 'Smart clipping', 'f1.d': 'AI finds the most gripping moments from the transcript.',
+          'f2.t': 'Auto captions', 'f2.d': 'Alex Hormozi–style word-by-word captions, 30+ styles.',
+          'f3.t': 'Localization', 'f3.d': 'Voice-over and captions in RU/EN/ES/PT/PL with one click.',
+          'f4.t': 'Auto-publishing', 'f4.d': 'Direct upload to YouTube Shorts on a schedule.',
+          'f5.t': 'Seasonal intelligence', 'f5.d': 'Knows when to post oven repairs vs. air-conditioner repairs.',
+          'f6.t': 'No watermarks', 'f6.d': 'A clean result on paid plans.',
+
+          'demo.eyebrow': 'Demo', 'demo.title': 'One long video in. Three clips out.',
+          'demo.src': 'SOURCE', 'demo.out': 'OUTPUT', 'demo.play': 'Play video',
+          'demo.caption': '<span><b>One source video → three finished clips.</b> A real result from the @remont_texnika channel</span>',
+
+          'price.eyebrow': 'Pricing', 'price.title': 'Start free. Pay when you grow.',
+          'price.mo0': 'forever', 'price.mo': '/mo', 'price.pop': 'Popular',
+          'free.d': 'To try it and judge the quality.',
+          'free.1': '3 videos a month', 'free.2': '1 Shorts per video', 'free.3': 'With watermark', 'free.cta': 'Start free',
+          'cr.d': 'For creators who publish regularly.',
+          'cr.1': '30 videos a month', 'cr.2': '3 Shorts per video', 'cr.3': 'No watermark', 'cr.4': 'Auto-publishing', 'cr.cta': 'Choose Creator',
+          'st.d': 'For studios and creators with multiple channels.',
+          'st.1': 'Unlimited videos', 'st.2': 'API access', 'st.3': 'Multi-channel', 'st.4': 'Everything in Creator', 'st.cta': 'Choose Studio',
+          'svc.t': 'Don’t want to figure it out yourself?',
+          'svc.d': 'Done-for-you channel management: strategy, clipping, captions, publishing and analytics. You film — we grow the channel.',
+          'svc.from': 'from', 'svc.cta': 'Request a call',
+
+          'faq.eyebrow': 'FAQ', 'faq.title': 'Frequently asked questions',
+          'q1': 'How does the free plan work?',
+          'a1': 'You get 3 videos a month, one Shorts from each. Clips come with a watermark. No card required, and the limit resets every month.',
+          'q2': 'Do I need to edit anything?',
+          'a2': 'No. The bot picks the moments, crops to 9:16, adds captions and assembles the clip. No Premiere, no CapCut, no timeline. If you want something different, pick another moment or caption style.',
+          'q3': 'Which languages are supported?',
+          'a3': 'Voice-over and captions are available in Russian, English, Spanish, Portuguese and Polish. One click localizes a clip for a new audience.',
+          'q4': 'Can I use my own files?',
+          'a4': 'Yes. Send a YouTube link or the video file itself to the chat. For large files a link is more reliable — a YouTube link (unlisted works too) or a cloud link.',
+          'q5': 'How is it different from Opus Clip?',
+          'a5': 'Everything happens inside Telegram: no web editor, no extra screens. On top of that you get 5-language localization, auto-publishing, seasonal intelligence (when to post ovens vs. A/C) and a done-for-you channel option. Built by a practicing YouTube creator.',
+          'q6': 'How do I cancel my subscription?',
+          'a6': 'In one click in the bot settings. You keep access until the end of the paid period — no support emails needed.',
+
+          'final.title': 'Your first Shorts — in 2 minutes.', 'final.cta': 'Open in Telegram',
+          'final.note': 'Free · No card · Cancel in one click',
+
+          'foot.aria': 'Footer', 'foot.pricing': 'Pricing', 'foot.docs': 'Documentation',
+          'foot.privacy': 'Privacy Policy', 'foot.contacts': 'Contact',
+          'foot.made': 'Built by a practicing YouTube creator, not by marketers.'
+        }
+      };
+
+      /* ---------- Language switching ---------- */
+      var root = document.documentElement;
+      var buttons = document.querySelectorAll('[data-lang]');
+
+      function setLang(lang) {
+        var dict = translations[lang];
+        if (!dict) return;
+        document.querySelectorAll('[data-i18n]').forEach(function (el) {
+          var v = dict[el.getAttribute('data-i18n')];
+          if (v !== undefined) el.textContent = v;
+        });
+        document.querySelectorAll('[data-i18n-html]').forEach(function (el) {
+          var v = dict[el.getAttribute('data-i18n-html')];
+          if (v !== undefined) el.innerHTML = v;
+        });
+        document.querySelectorAll('[data-i18n-aria]').forEach(function (el) {
+          var v = dict[el.getAttribute('data-i18n-aria')];
+          if (v !== undefined) el.setAttribute('aria-label', v);
+        });
+        root.lang = lang;
+        document.title = dict['meta.title'];
+        var md = document.querySelector('meta[name="description"]');
+        if (md) md.setAttribute('content', dict['meta.desc']);
+        buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === lang)); });
+        try { localStorage.setItem('lang', lang); } catch (e) {}
+      }
+
+      buttons.forEach(function (b) {
+        b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); });
+      });
+
+      var saved = null;
+      try { saved = localStorage.getItem('lang'); } catch (e) {}
+      var urlLang = (new URLSearchParams(location.search).get('lang') || '').toLowerCase();
+      var initial = translations[urlLang] ? urlLang : (translations[saved] ? saved : 'ru');
+      if (initial !== 'ru') setLang(initial);
+
+      /* ---------- Reveal on scroll (fade only) ---------- */
+      var reveals = document.querySelectorAll('.reveal');
+      reveals.forEach(function (el) {
+        var d = el.getAttribute('data-delay');
+        if (d) el.style.transitionDelay = d + 'ms';
+      });
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        reveals.forEach(function (el) { io.observe(el); });
+      } else {
+        reveals.forEach(function (el) { el.classList.add('in'); });
+      }
+
+      /* ---------- Header border on scroll ---------- */
+      var header = document.getElementById('header');
+      function onScroll() { header.classList.toggle('scrolled', window.scrollY > 8); }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      /* ---------- YouTube facade (loads iframe on click: keeps page light) ---------- */
+      var player = document.getElementById('player');
+      var playBtn = document.getElementById('playBtn');
+      playBtn.addEventListener('click', function () {
+        var id = player.getAttribute('data-video-id');
+        var f = document.createElement('iframe');
+        f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+        f.title = 'YouTube video player';
+        f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        f.allowFullscreen = true;
+        player.replaceChildren(f);
+        f.focus();
+      });
+
+      document.getElementById('year').textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>
