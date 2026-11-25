@@ -388,34 +388,8 @@
     });
   }
 
-  // Progressive scroll-reveal for below-the-fold sections only
-  var items = document.querySelectorAll('.reveal');
-  if (items.length > 0) {
-    var reduce = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce || !('IntersectionObserver' in window)) {
-      items.forEach(function (el) {
-        el.classList.add('in');
-      });
-    } else {
-      root.classList.add('js-reveal');
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) {
-            e.target.classList.add('in');
-            io.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.02, rootMargin: '0px 0px -20px 0px' });
-
-      items.forEach(function (el) {
-        io.observe(el);
-      });
-
-      setTimeout(function () {
-        items.forEach(function (el) {
-          el.classList.add('in');
-        });
-      }, 2500);
-    }
-  }
+  // Mark reveal blocks ready immediately so content never flashes at partial opacity
+  document.querySelectorAll('.reveal').forEach(function (el) {
+    el.classList.add('in');
+  });
 })();
