@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://koshorts.vercel.app/sitemap.xml
