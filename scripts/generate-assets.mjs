@@ -135,9 +135,9 @@ function buildOgSvg({ badge, line1, line2, line3, sub, statLabel, ctaText }) {
     <rect x="0" y="0" width="292" height="58" rx="14" fill="#5E6AD2"/>
     <text x="146" y="36" text-anchor="middle" font-family="Inter, DejaVu Sans, sans-serif" font-size="19" font-weight="600" fill="#FFFFFF">${ctaText}</text>
 
-    <rect x="314" y="0" width="296" height="58" rx="14" fill="#0F1011" stroke="#FFFFFF" stroke-opacity="0.14"/>
-    <text x="338" y="36" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="22" font-weight="500" fill="#8B93F8">230K</text>
-    <text x="408" y="35" font-family="Inter, DejaVu Sans, sans-serif" font-size="16" font-weight="400" fill="#8A8F98">${statLabel}</text>
+    <rect x="314" y="0" width="318" height="58" rx="14" fill="#0F1011" stroke="#34D399" stroke-opacity="0.38"/>
+    <text x="336" y="36" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="22" font-weight="500" fill="#34D399">+248K</text>
+    <text x="420" y="35" font-family="Inter, DejaVu Sans, sans-serif" font-size="16" font-weight="400" fill="#8A8F98">${statLabel}</text>
   </g>
 
   <!-- Right-side 3 vertical 9:16 Shorts preview cards -->
@@ -225,26 +225,26 @@ renderSvgToPng(appleIconSvg, path.join(ROOT, 'apple-touch-icon.png'));
 
 renderSvgToPng(
   buildOgSvg({
-    badge: 'TELEGRAM BOT · YOUTUBE → SHORTS 9:16',
-    line1: 'Из одного видео —',
-    line2: 'три вирусных Shorts.',
-    line3: 'За шесть минут.',
-    sub: 'Пословные субтитры · 10 видео бесплатно · Без карты',
-    statLabel: 'просмотров на 1 Short',
-    ctaText: 'Открыть в Telegram'
+    badge: '12 ИЗ 50 МЕСТ −22% · 10 ВИДЕО БЕСПЛАТНО',
+    line1: 'Из 1 длинного видео —',
+    line2: '3 вирусных Shorts.',
+    line3: 'За 6 минут в Telegram.',
+    sub: 'Пословные субтитры · 9:16 · Автопубликация в YouTube',
+    statLabel: 'просмотров с 1 ролика',
+    ctaText: 'Нарезать бесплатно'
   }),
   path.join(ROOT, 'og.png')
 );
 
 renderSvgToPng(
   buildOgSvg({
-    badge: 'TELEGRAM BOT · YOUTUBE → SHORTS 9:16',
-    line1: 'One long video.',
-    line2: 'Three viral Shorts.',
-    line3: 'Six minutes.',
-    sub: 'Word-by-word subtitles · 10 free videos · No card',
-    statLabel: 'views on 1 Short',
-    ctaText: 'Open in Telegram'
+    badge: '12 OF 50 SPOTS −22% · 10 FREE VIDEOS',
+    line1: '1 Long Video Into',
+    line2: '3 Viral Shorts.',
+    line3: '6 Minutes in Telegram.',
+    sub: 'Word-by-word captions · 9:16 · Direct YouTube publish',
+    statLabel: 'views from 1 video',
+    ctaText: 'Cut Free in Telegram'
   }),
   path.join(ROOT, 'og-en.png')
 );

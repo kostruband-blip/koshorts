@@ -25,6 +25,13 @@ function readPngDimensions(filePath) {
   };
 }
 
+const openDoms = [];
+test.afterEach(() => {
+  while (openDoms.length > 0) {
+    openDoms.pop().window.close();
+  }
+});
+
 function bootPage(relFile, { url = 'https://koshorts.vercel.app/', languages = ['ru-RU', 'ru'] } = {}) {
   const html = fs.readFileSync(path.join(ROOT, relFile), 'utf8');
   const dom = new JSDOM(html, {
@@ -32,6 +39,7 @@ function bootPage(relFile, { url = 'https://koshorts.vercel.app/', languages = [
     runScripts: 'outside-only',
     pretendToBeVisual: true
   });
+  openDoms.push(dom);
 
   const { window } = dom;
   Object.defineProperty(window.navigator, 'languages', {
@@ -138,8 +146,9 @@ test('Real YouTube Studio analytics and Early Adopter 12-of-50 copy are present'
   assert.ok(ruHtml.includes('11.6K'));
   assert.ok(ruHtml.includes('8:22'));
   assert.ok(ruHtml.includes('274K'));
+  assert.ok(ruHtml.includes('247 678'));
   assert.ok(ruHtml.includes('@rem-tex'));
-  assert.ok(ruHtml.includes('осталось 12 из 50'));
+  assert.ok(ruHtml.includes('12 из 50'));
 });
 
 test('i18n dictionaries have 1:1 key parity and static en/index.html has zero Cyrillic', () => {
@@ -210,7 +219,7 @@ test('Telegram chat messages are in chronological order and Hero LCP elements ar
   const times = Array.from(document.querySelectorAll('.tg-msgs .m .t')).map((el) => el.textContent.trim().slice(0, 5));
   assert.deepEqual(times, ['22:38', '22:39', '22:41', '22:43']);
 
-  for (const sel of ['.hero .badge', '.hero h1', '.hero .sub', '.hero-cta', '.mock-wrap']) {
+  for (const sel of ['.promo-pill', '.hero h1', '.hero .sub', '.try-box', '.stage-wrap']) {
     const el = document.querySelector(sel);
     assert.ok(el, `${sel} must exist`);
     assert.ok(!el.classList.contains('reveal'), `${sel} must not have .reveal opacity-0 delay`);
@@ -261,6 +270,46 @@ test('Interactive video player, Shorts modal viewer, backdrop drag guard, and th
   assert.equal(viewer.open, false);
   assert.equal(document.querySelector('#shorts-player iframe'), null);
   assert.ok(!document.body.classList.contains('video-open'));
+});
+
+test('Interactive 4-style subtitle switcher and Hero YouTube link launcher work cleanly', () => {
+  const dom = bootPage('index.html', {
+    url: 'https://koshorts.vercel.app/',
+    languages: ['ru-RU']
+  });
+  const { window } = dom;
+  const { document } = window;
+
+  let openedUrl = null;
+  window.open = (url) => {
+    openedUrl = url;
+  };
+
+  // Switch caption styles
+  const phoneMock = document.getElementById('phone-mock');
+  const pill = document.getElementById('phone-style-pill');
+  const neonTab = document.querySelector('.style-tab[data-style-id="neon"]');
+  neonTab.click();
+
+  assert.equal(phoneMock.getAttribute('data-active-style'), 'neon');
+  assert.equal(neonTab.getAttribute('aria-pressed'), 'true');
+  assert.ok(pill.textContent.includes('Неон'));
+
+  // Switch language to EN while Neon style is active
+  document.querySelector('.lang button[data-lang="en"]').click();
+  assert.ok(pill.textContent.includes('Neon'));
+
+  // Submit YouTube link in Hero launcher
+  const tryInput = document.getElementById('try-input');
+  const tryForm = document.getElementById('try-form');
+  const tryToast = document.getElementById('try-toast');
+  assert.equal(tryToast.hidden, true);
+
+  tryInput.value = 'https://youtu.be/0TZPOmktw2U';
+  tryForm.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+
+  assert.equal(tryToast.hidden, false);
+  assert.equal(openedUrl, 'https://t.me/remtex_shorts_ai_bot?start=free');
 });
 
 test('Legal pages (/privacy/ and /terms/) contain support contacts and switch cleanly to English', () => {
