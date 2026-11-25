@@ -45,6 +45,14 @@
     }
   });
 
+  function normalizeLang(raw) {
+    var v = String(raw || '').toLowerCase();
+    if (v === 'ua' || v === 'uk') return 'uk';
+    if (v === 'en') return 'en';
+    if (v === 'ru') return 'ru';
+    return '';
+  }
+
   function detectBrowserLang() {
     var list = [];
     if (typeof navigator !== 'undefined') {
@@ -56,30 +64,36 @@
     }
     for (var i = 0; i < list.length; i++) {
       var code = String(list[i] || '').toLowerCase();
-      if (code.indexOf('ru') === 0 || code.indexOf('uk') === 0 || code.indexOf('be') === 0 || code.indexOf('kk') === 0) {
+      if (code.indexOf('uk') === 0) {
+        return 'uk';
+      }
+      if (code.indexOf('ru') === 0 || code.indexOf('be') === 0 || code.indexOf('kk') === 0) {
         return 'ru';
       }
       if (code.indexOf('en') === 0) {
         return 'en';
       }
     }
-    return root.lang === 'en' ? 'en' : 'ru';
+    return normalizeLang(root.lang) || 'ru';
   }
 
   function resolveInitialLang() {
     try {
-      var q = new URLSearchParams(location.search).get('lang');
-      if (q === 'en' || q === 'ru') return q;
+      var q = normalizeLang(new URLSearchParams(location.search).get('lang'));
+      if (q) return q;
     } catch (e) {}
 
     var path = (typeof location !== 'undefined' && location.pathname) ? location.pathname : '/';
+    if (path === '/uk' || path.indexOf('/uk/') === 0) {
+      return 'uk';
+    }
     if (path === '/en' || path.indexOf('/en/') === 0) {
       return 'en';
     }
 
     try {
-      var saved = localStorage.getItem('koshorts-lang');
-      if (saved === 'en' || saved === 'ru') return saved;
+      var saved = normalizeLang(localStorage.getItem('koshorts-lang'));
+      if (saved) return saved;
     } catch (e) {}
 
     return detectBrowserLang();
@@ -97,21 +111,33 @@
   var twImg = document.querySelector('meta[name="twitter:image"]');
   var canonical = document.querySelector('link[rel="canonical"]');
 
+  function langHomePath(lang) {
+    if (lang === 'uk') return '/uk/';
+    if (lang === 'en') return '/en/';
+    return '/';
+  }
+
+  function langOgLocale(lang) {
+    if (lang === 'uk') return 'uk_UA';
+    if (lang === 'en') return 'en_US';
+    return 'ru_RU';
+  }
+
   function updateSeoUrls(lang, updateHistory) {
     var hash = (typeof location !== 'undefined' && location.hash) ? location.hash : '';
+    var homePath = langHomePath(lang);
     if (!legalPage) {
-      var targetPath = lang === 'en' ? '/en/' : '/';
-      var fullUrl = SITE_ORIGIN + targetPath;
+      var fullUrl = SITE_ORIGIN + homePath;
       if (canonical) canonical.setAttribute('href', fullUrl);
       if (ogUrl) ogUrl.setAttribute('content', fullUrl);
       if (updateHistory && typeof history !== 'undefined' && typeof history.replaceState === 'function') {
         try {
-          history.replaceState(null, '', targetPath + hash);
+          history.replaceState(null, '', homePath + hash);
         } catch (e) {}
       }
     } else {
       var basePath = '/' + legalPage + '/';
-      var query = lang === 'en' ? '?lang=en' : '';
+      var query = (lang === 'en' || lang === 'uk') ? '?lang=' + lang : '';
       if (updateHistory && typeof history !== 'undefined' && typeof history.replaceState === 'function') {
         try {
           history.replaceState(null, '', basePath + query + hash);
@@ -119,18 +145,20 @@
       }
       document.querySelectorAll('[data-home-link]').forEach(function (a) {
         var suffix = a.getAttribute('data-home-anchor') || '';
-        a.setAttribute('href', (lang === 'en' ? '/en/' : '/') + suffix);
+        a.setAttribute('href', homePath + suffix);
       });
     }
 
     document.querySelectorAll('[data-legal-link]').forEach(function (a) {
       var slug = a.getAttribute('data-legal-link');
-      a.setAttribute('href', '/' + slug + '/' + (lang === 'en' ? '?lang=en' : ''));
+      var q = (lang === 'en' || lang === 'uk') ? '?lang=' + lang : '';
+      a.setAttribute('href', '/' + slug + '/' + q);
     });
   }
 
   function applyLang(lang, options) {
     if (!translations) return;
+    lang = normalizeLang(lang) || 'ru';
     if (!translations[lang]) lang = 'ru';
     var opts = options || {};
     var t = translations[lang];
@@ -144,8 +172,8 @@
     if (twT && t.og_title) twT.setAttribute('content', t.og_title);
     if (twD && t.og_desc) twD.setAttribute('content', t.og_desc);
     if (twImg && t.og_image) twImg.setAttribute('content', t.og_image);
-    if (ogL) ogL.setAttribute('content', lang === 'ru' ? 'ru_RU' : 'en_US');
-    if (ogLa) ogLa.setAttribute('content', lang === 'ru' ? 'en_US' : 'ru_RU');
+    if (ogL) ogL.setAttribute('content', langOgLocale(lang));
+    if (ogLa) ogLa.setAttribute('content', lang === 'en' ? 'uk_UA' : 'en_US');
 
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
       var k = el.getAttribute('data-i18n');
@@ -183,8 +211,8 @@
   if (translations) {
     var hasQueryLang = false;
     try {
-      var qParam = new URLSearchParams(location.search).get('lang');
-      hasQueryLang = qParam === 'en' || qParam === 'ru';
+      var qParam = normalizeLang(new URLSearchParams(location.search).get('lang'));
+      hasQueryLang = Boolean(qParam);
     } catch (e) {}
     var initialLang = resolveInitialLang();
     applyLang(initialLang, { persist: hasQueryLang, updateHistory: false });
@@ -258,7 +286,7 @@
   function createYouTubeFrame(id, titleKey) {
     if (!YT_ID_RE.test(id)) return null;
     var f = document.createElement('iframe');
-    var lang = root.lang === 'en' ? 'en' : 'ru';
+    var lang = normalizeLang(root.lang) || 'ru';
     f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&playsinline=1&rel=0&hl=' + encodeURIComponent(lang);
     var dict = translations && translations[lang];
     f.title = (dict && dict[titleKey]) ? dict[titleKey] : 'YouTube video player';
@@ -360,34 +388,8 @@
     });
   }
 
-  // Progressive scroll-reveal for below-the-fold sections only
-  var items = document.querySelectorAll('.reveal');
-  if (items.length > 0) {
-    var reduce = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce || !('IntersectionObserver' in window)) {
-      items.forEach(function (el) {
-        el.classList.add('in');
-      });
-    } else {
-      root.classList.add('js-reveal');
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) {
-            e.target.classList.add('in');
-            io.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.02, rootMargin: '0px 0px -20px 0px' });
-
-      items.forEach(function (el) {
-        io.observe(el);
-      });
-
-      setTimeout(function () {
-        items.forEach(function (el) {
-          el.classList.add('in');
-        });
-      }, 2500);
-    }
-  }
+  // Mark reveal blocks ready immediately so content never flashes at partial opacity
+  document.querySelectorAll('.reveal').forEach(function (el) {
+    el.classList.add('in');
+  });
 })();

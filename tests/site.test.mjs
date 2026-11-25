@@ -15,6 +15,7 @@ const legalI18nCode = fs.readFileSync(path.join(ROOT, 'assets/legal-i18n.js'), '
 const appCode = fs.readFileSync(path.join(ROOT, 'assets/app.js'), 'utf8');
 
 const CYRILLIC_RE = /[А-Яа-яЁёІіЇїЄєҐґ]/;
+const RU_ONLY_LETTERS_RE = /[ыъэёЫЪЭЁ]/;
 
 function readPngDimensions(filePath) {
   const buf = fs.readFileSync(filePath);
@@ -87,14 +88,17 @@ function bootPage(relFile, { url = 'https://koshorts.vercel.app/', languages = [
   return dom;
 }
 
-test('Static assets, OG images (1200x630),vercel.json, robots.txt, and sitemap.xml are valid', () => {
+test('Static assets, OG images (og.png, og-uk.png, og-en.png at 1200x630), vercel.json, robots.txt, and sitemap.xml are valid', () => {
   assert.deepEqual(readPngDimensions(path.join(ROOT, 'og.png')), { width: 1200, height: 630 });
+  assert.deepEqual(readPngDimensions(path.join(ROOT, 'og-uk.png')), { width: 1200, height: 630 });
   assert.deepEqual(readPngDimensions(path.join(ROOT, 'og-en.png')), { width: 1200, height: 630 });
   assert.deepEqual(readPngDimensions(path.join(ROOT, 'apple-touch-icon.png')), { width: 180, height: 180 });
 
   assert.ok(fs.existsSync(path.join(ROOT, 'favicon.svg')));
   assert.ok(fs.existsSync(path.join(ROOT, 'robots.txt')));
-  assert.ok(fs.existsSync(path.join(ROOT, 'sitemap.xml')));
+  const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+  assert.ok(sitemap.includes('https://koshorts.vercel.app/uk/'));
+  assert.ok(sitemap.includes('hreflang="uk"'));
 
   const vercel = JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
   const cspHeader = vercel.headers[0].headers.find((h) => h.key === 'Content-Security-Policy');
@@ -102,8 +106,20 @@ test('Static assets, OG images (1200x630),vercel.json, robots.txt, and sitemap.x
   assert.ok(cspHeader.value.includes("script-src 'self'"), 'CSP script-src should not allow unsafe-inline');
 });
 
-test('All HTML files are free of Tailwind Play CDN, inline scripts/styles/handlers, and TODO placeholders', () => {
-  const htmlFiles = ['index.html', 'en/index.html', 'privacy/index.html', 'terms/index.html'];
+test('All HTML files are free of Tailwind Play CDN, inline scripts/styles/handlers, and forbidden price-lock claims', () => {
+  const htmlFiles = ['index.html', 'uk/index.html', 'en/index.html', 'privacy/index.html', 'terms/index.html'];
+  const forbiddenList = [
+    'ЗАМЕНИТЬ',
+    'добавить og.png',
+    '@remont_texnika',
+    '22:37',
+    '217K',
+    'фиксируется',
+    'закрепляется',
+    'фіксується',
+    'закріплюється',
+    'Price locked'
+  ];
 
   for (const rel of htmlFiles) {
     const raw = fs.readFileSync(path.join(ROOT, rel), 'utf8');
@@ -114,29 +130,20 @@ test('All HTML files are free of Tailwind Play CDN, inline scripts/styles/handle
     assert.ok(!/\son[a-z]+="/i.test(raw), `${rel} must not contain inline event handlers`);
     assert.ok(!raw.includes('data-i18n-html'), `${rel} must not use innerHTML i18n sink`);
 
-    for (const forbidden of [
-      'ЗАМЕНИТЬ',
-      'добавить og.png',
-      '@remont_texnika',
-      '22:37',
-      '217K',
-      'фиксируется',
-      'закрепляется',
-      'Price locked'
-    ]) {
-      assert.ok(!raw.includes(forbidden), `${rel} must not contain outdated/placeholder text: ${forbidden}`);
+    for (const forbidden of forbiddenList) {
+      assert.ok(!raw.includes(forbidden), `${rel} must not contain outdated/forbidden text: ${forbidden}`);
     }
   }
 
   for (const jsRel of ['assets/i18n.js', 'assets/legal-i18n.js', 'assets/app.js']) {
     const rawJs = fs.readFileSync(path.join(ROOT, jsRel), 'utf8');
-    for (const forbidden of ['фиксируется', 'закрепляется', 'Price locked', '@remont_texnika', '217K']) {
+    for (const forbidden of forbiddenList) {
       assert.ok(!rawJs.includes(forbidden), `${jsRel} must not contain forbidden text: ${forbidden}`);
     }
   }
 });
 
-test('Real YouTube Studio analytics and Early Adopter 12-of-50 copy are present', () => {
+test('Real YouTube Studio analytics and Early Adopter 12-of-50 copy are present in RU and UA', () => {
   const ruHtml = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
   assert.ok(ruHtml.includes('230K'));
   assert.ok(ruHtml.includes('00:31'));
@@ -149,37 +156,75 @@ test('Real YouTube Studio analytics and Early Adopter 12-of-50 copy are present'
   assert.ok(ruHtml.includes('247 678'));
   assert.ok(ruHtml.includes('@rem-tex'));
   assert.ok(ruHtml.includes('12 из 50'));
+
+  const ukHtml = fs.readFileSync(path.join(ROOT, 'uk/index.html'), 'utf8');
+  assert.ok(ukHtml.includes('247 678'));
+  assert.ok(ukHtml.includes('@rem-tex'));
+  assert.ok(ukHtml.includes('12 із 50'));
 });
 
-test('i18n dictionaries have 1:1 key parity and static en/index.html has zero Cyrillic', () => {
+test('RU, UK, and EN i18n dictionaries have 1:1:1 key parity, EN has zero Cyrillic, and UK has zero Russian-only letters', () => {
   const sandbox = { globalThis: {} };
   sandbox.globalThis = sandbox;
   vm.runInNewContext(i18nCode, sandbox);
+  vm.runInNewContext(legalI18nCode, sandbox);
 
   const ruKeys = Object.keys(sandbox.KOSHORTS_I18N.ru).sort();
+  const ukKeys = Object.keys(sandbox.KOSHORTS_I18N.uk).sort();
   const enKeys = Object.keys(sandbox.KOSHORTS_I18N.en).sort();
+  assert.deepEqual(ruKeys, ukKeys, 'RU and UK landing dictionaries must have identical keys');
   assert.deepEqual(ruKeys, enKeys, 'RU and EN landing dictionaries must have identical keys');
+
+  for (const page of ['privacy', 'terms']) {
+    const lRu = Object.keys(sandbox.KOSHORTS_LEGAL_I18N[page].ru).sort();
+    const lUk = Object.keys(sandbox.KOSHORTS_LEGAL_I18N[page].uk).sort();
+    const lEn = Object.keys(sandbox.KOSHORTS_LEGAL_I18N[page].en).sort();
+    assert.deepEqual(lRu, lUk, `Legal ${page} RU and UK dictionaries must have identical keys`);
+    assert.deepEqual(lRu, lEn, `Legal ${page} RU and EN dictionaries must have identical keys`);
+  }
 
   for (const [k, val] of Object.entries(sandbox.KOSHORTS_I18N.en)) {
     assert.ok(!CYRILLIC_RE.test(val), `KOSHORTS_I18N.en.${k} contains Cyrillic: ${val}`);
   }
+  for (const [k, val] of Object.entries(sandbox.KOSHORTS_I18N.uk)) {
+    assert.ok(!RU_ONLY_LETTERS_RE.test(val), `KOSHORTS_I18N.uk.${k} contains Russian-only letters: ${val}`);
+  }
+  for (const page of ['privacy', 'terms']) {
+    for (const [k, val] of Object.entries(sandbox.KOSHORTS_LEGAL_I18N[page].uk)) {
+      assert.ok(!RU_ONLY_LETTERS_RE.test(val), `KOSHORTS_LEGAL_I18N.${page}.uk.${k} contains Russian-only letters: ${val}`);
+    }
+  }
 
-  const enRaw = fs.readFileSync(path.join(ROOT, 'en/index.html'), 'utf8');
-  const enDom = new JSDOM(enRaw);
-  const doc = enDom.window.document;
+  // Verify static en/index.html
+  const enDom = new JSDOM(fs.readFileSync(path.join(ROOT, 'en/index.html'), 'utf8'));
+  openDoms.push(enDom);
+  const enDoc = enDom.window.document;
+  assert.equal(enDoc.documentElement.lang, 'en');
+  assert.ok(!CYRILLIC_RE.test(enDoc.title), 'en/index.html <title> must not contain Cyrillic');
+  assert.ok(!CYRILLIC_RE.test(enDoc.body.textContent), 'en/index.html body text must not contain any Cyrillic');
+  enDoc.querySelectorAll('[aria-label]').forEach((el) => {
+    assert.ok(!CYRILLIC_RE.test(el.getAttribute('aria-label')));
+  });
 
-  assert.equal(doc.documentElement.lang, 'en');
-  assert.ok(!CYRILLIC_RE.test(doc.title), 'en/index.html <title> must not contain Cyrillic');
-  assert.ok(!CYRILLIC_RE.test(doc.body.textContent), 'en/index.html body text must not contain any Cyrillic');
-  doc.querySelectorAll('[aria-label]').forEach((el) => {
-    assert.ok(
-      !CYRILLIC_RE.test(el.getAttribute('aria-label')),
-      `en/index.html aria-label has Cyrillic: ${el.getAttribute('aria-label')}`
-    );
+  // Verify static uk/index.html
+  const ukDom = new JSDOM(fs.readFileSync(path.join(ROOT, 'uk/index.html'), 'utf8'));
+  openDoms.push(ukDom);
+  const ukDoc = ukDom.window.document;
+  assert.equal(ukDoc.documentElement.lang, 'uk');
+  assert.equal(ukDoc.querySelector('link[rel="canonical"]').getAttribute('href'), 'https://koshorts.vercel.app/uk/');
+  assert.equal(ukDoc.querySelector('meta[property="og:image"]').getAttribute('content'), 'https://koshorts.vercel.app/og-uk.png');
+  assert.equal(ukDoc.querySelector('meta[property="og:locale"]').getAttribute('content'), 'uk_UA');
+  assert.ok(!RU_ONLY_LETTERS_RE.test(ukDoc.title), 'uk/index.html <title> must not contain Russian-only letters');
+  assert.ok(!RU_ONLY_LETTERS_RE.test(ukDoc.body.textContent), 'uk/index.html body text must not contain Russian-only letters');
+  ukDoc.querySelectorAll('[aria-label]').forEach((el) => {
+    assert.ok(!RU_ONLY_LETTERS_RE.test(el.getAttribute('aria-label')));
+  });
+  ukDoc.querySelectorAll('[placeholder]').forEach((el) => {
+    assert.ok(!RU_ONLY_LETTERS_RE.test(el.getAttribute('placeholder')));
   });
 });
 
-test('Switching language on / updates DOM, URL, canonical, localStorage, and leaves zero Cyrillic in EN', () => {
+test('Switching language on / across RU -> UA -> EN updates DOM, URL, canonical, OG tags, and localStorage cleanly', () => {
   const dom = bootPage('index.html', {
     url: 'https://koshorts.vercel.app/',
     languages: ['ru-RU']
@@ -188,9 +233,18 @@ test('Switching language on / updates DOM, URL, canonical, localStorage, and lea
 
   assert.equal(document.documentElement.lang, 'ru');
 
-  const enBtn = document.querySelector('.lang button[data-lang="en"]');
-  enBtn.click();
+  // Switch to Ukrainian (UA)
+  document.querySelector('.lang button[data-lang="uk"]').click();
+  assert.equal(document.documentElement.lang, 'uk');
+  assert.equal(localStorage.getItem('koshorts-lang'), 'uk');
+  assert.equal(location.pathname, '/uk/');
+  assert.equal(document.querySelector('link[rel="canonical"]').getAttribute('href'), 'https://koshorts.vercel.app/uk/');
+  assert.equal(document.querySelector('meta[property="og:image"]').getAttribute('content'), 'https://koshorts.vercel.app/og-uk.png');
+  assert.equal(document.querySelector('meta[property="og:locale"]').getAttribute('content'), 'uk_UA');
+  assert.ok(!RU_ONLY_LETTERS_RE.test(document.body.textContent), 'Body text after switching to UA must have zero Russian-only letters');
 
+  // Switch to English (EN)
+  document.querySelector('.lang button[data-lang="en"]').click();
   assert.equal(document.documentElement.lang, 'en');
   assert.equal(localStorage.getItem('koshorts-lang'), 'en');
   assert.equal(location.pathname, '/en/');
@@ -198,18 +252,30 @@ test('Switching language on / updates DOM, URL, canonical, localStorage, and lea
   assert.ok(!CYRILLIC_RE.test(document.body.textContent), 'Body text after switching to EN must have zero Cyrillic');
 });
 
-test('First-visit browser language auto-detection selects EN for English browsers and RU for Ukrainian/Russian browsers', () => {
+test('First-visit browser language auto-detection selects UK for Ukrainian, EN for English, RU for Russian, and normalizes ?lang=ua', () => {
+  const uaDom = bootPage('index.html', {
+    url: 'https://koshorts.vercel.app/',
+    languages: ['uk-UA', 'en-US']
+  });
+  assert.equal(uaDom.window.document.documentElement.lang, 'uk');
+
   const enDom = bootPage('index.html', {
     url: 'https://koshorts.vercel.app/',
     languages: ['en-US', 'en']
   });
   assert.equal(enDom.window.document.documentElement.lang, 'en');
 
-  const uaDom = bootPage('index.html', {
+  const ruDom = bootPage('index.html', {
     url: 'https://koshorts.vercel.app/',
-    languages: ['uk-UA', 'en-US']
+    languages: ['ru-RU', 'ru']
   });
-  assert.equal(uaDom.window.document.documentElement.lang, 'ru');
+  assert.equal(ruDom.window.document.documentElement.lang, 'ru');
+
+  const uaQueryDom = bootPage('index.html', {
+    url: 'https://koshorts.vercel.app/?lang=ua',
+    languages: ['en-US']
+  });
+  assert.equal(uaQueryDom.window.document.documentElement.lang, 'uk');
 });
 
 test('Telegram chat messages are in chronological order and Hero LCP elements are immediately visible', () => {
@@ -235,7 +301,6 @@ test('Interactive video player, Shorts modal viewer, backdrop drag guard, and th
   const { window } = dom;
   const { document } = window;
 
-  // 1. Thumbnail error fallback cascades oar2.jpg -> maxresdefault.jpg -> hqdefault.jpg
   const thumb = document.querySelector('img[data-yt-id="rrxsdUa7pWk"]');
   assert.ok(thumb.src.endsWith('/oar2.jpg'));
   thumb.dispatchEvent(new window.Event('error'));
@@ -243,12 +308,10 @@ test('Interactive video player, Shorts modal viewer, backdrop drag guard, and th
   thumb.dispatchEvent(new window.Event('error'));
   assert.ok(thumb.src.endsWith('/hqdefault.jpg'));
 
-  // 2. Source player click mounts iframe
   const playBtn = document.querySelector('#player button');
   playBtn.click();
   assert.ok(document.querySelector('#player iframe').src.includes('youtube-nocookie.com/embed/0TZPOmktw2U'));
 
-  // 3. Clicking a Short stops source player and opens modal viewer
   const shortLink = document.querySelector('.sh[data-short-id="bJmMqcmxC14"]');
   shortLink.click();
 
@@ -258,13 +321,11 @@ test('Interactive video player, Shorts modal viewer, backdrop drag guard, and th
   assert.ok(document.querySelector('#shorts-player iframe').src.includes('youtube-nocookie.com/embed/bJmMqcmxC14'));
   assert.ok(document.body.classList.contains('video-open'));
 
-  // 4. Drag starting inside .shorts-viewer-box and releasing on <dialog> must NOT close modal
   const innerBox = document.querySelector('.shorts-viewer-box');
   innerBox.dispatchEvent(new window.Event('pointerdown', { bubbles: true }));
   viewer.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
   assert.equal(viewer.open, true, 'Modal must stay open when pointerdown started inside .shorts-viewer-box');
 
-  // 5. Genuine backdrop click closes modal and cleans up iframe
   viewer.dispatchEvent(new window.Event('pointerdown', { bubbles: true }));
   viewer.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
   assert.equal(viewer.open, false);
@@ -272,7 +333,7 @@ test('Interactive video player, Shorts modal viewer, backdrop drag guard, and th
   assert.ok(!document.body.classList.contains('video-open'));
 });
 
-test('Interactive 4-style subtitle switcher and Hero YouTube link launcher work cleanly', () => {
+test('Interactive 4-style subtitle switcher and Hero YouTube link launcher work across RU, UA, and EN', () => {
   const dom = bootPage('index.html', {
     url: 'https://koshorts.vercel.app/',
     languages: ['ru-RU']
@@ -285,21 +346,23 @@ test('Interactive 4-style subtitle switcher and Hero YouTube link launcher work 
     openedUrl = url;
   };
 
-  // Switch caption styles
   const phoneMock = document.getElementById('phone-mock');
   const pill = document.getElementById('phone-style-pill');
-  const neonTab = document.querySelector('.style-tab[data-style-id="neon"]');
-  neonTab.click();
+  const podcastTab = document.querySelector('.style-tab[data-style-id="podcast"]');
+  podcastTab.click();
 
-  assert.equal(phoneMock.getAttribute('data-active-style'), 'neon');
-  assert.equal(neonTab.getAttribute('aria-pressed'), 'true');
-  assert.ok(pill.textContent.includes('Неон'));
+  assert.equal(phoneMock.getAttribute('data-active-style'), 'podcast');
+  assert.equal(podcastTab.getAttribute('aria-pressed'), 'true');
+  assert.ok(pill.textContent.includes('Строгий'));
 
-  // Switch language to EN while Neon style is active
+  // Switch language to UA while Podcast style is active
+  document.querySelector('.lang button[data-lang="uk"]').click();
+  assert.ok(pill.textContent.includes('Стриманий'));
+
+  // Switch language to EN while Podcast style is active
   document.querySelector('.lang button[data-lang="en"]').click();
-  assert.ok(pill.textContent.includes('Neon'));
+  assert.ok(pill.textContent.includes('Strict'));
 
-  // Submit YouTube link in Hero launcher
   const tryInput = document.getElementById('try-input');
   const tryForm = document.getElementById('try-form');
   const tryToast = document.getElementById('try-toast');
@@ -312,7 +375,7 @@ test('Interactive 4-style subtitle switcher and Hero YouTube link launcher work 
   assert.equal(openedUrl, 'https://t.me/remtex_shorts_ai_bot?start=free');
 });
 
-test('Legal pages (/privacy/ and /terms/) contain support contacts and switch cleanly to English', () => {
+test('Legal pages (/privacy/ and /terms/) contain support contacts and switch cleanly across RU, UA, and EN', () => {
   for (const rel of ['privacy/index.html', 'terms/index.html']) {
     const dom = bootPage(rel, {
       url: `https://koshorts.vercel.app/${rel.replace('index.html', '')}`,
@@ -323,14 +386,20 @@ test('Legal pages (/privacy/ and /terms/) contain support contacts and switch cl
     assert.ok(document.body.textContent.includes('@remtex_shorts_ai_bot'));
     assert.ok(document.body.textContent.includes('kostruband@gmail.com'));
 
+    document.querySelector('.lang button[data-lang="uk"]').click();
+    assert.equal(document.documentElement.lang, 'uk');
+    assert.equal(document.querySelector('.legal-back').getAttribute('href'), '/uk/');
+    assert.ok(!RU_ONLY_LETTERS_RE.test(document.body.textContent), `${rel} in UA mode must contain zero Russian-only letters`);
+
     document.querySelector('.lang button[data-lang="en"]').click();
     assert.equal(document.documentElement.lang, 'en');
+    assert.equal(document.querySelector('.legal-back').getAttribute('href'), '/en/');
     assert.ok(!CYRILLIC_RE.test(document.body.textContent), `${rel} in EN mode must contain zero Cyrillic`);
   }
 });
 
-test('Accessibility audit (axe-core) passes with zero violations across all pages', async () => {
-  for (const rel of ['index.html', 'en/index.html', 'privacy/index.html', 'terms/index.html']) {
+test('Accessibility audit (axe-core) passes with zero violations across all 5 HTML pages', async () => {
+  for (const rel of ['index.html', 'uk/index.html', 'en/index.html', 'privacy/index.html', 'terms/index.html']) {
     const dom = bootPage(rel);
     dom.window.eval(axe.source);
     const results = await dom.window.axe.run(dom.window.document, {

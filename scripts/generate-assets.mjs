@@ -71,10 +71,13 @@ function woffToSfnt(woffBuf) {
 function loadFontBuffers() {
   const woffPaths = [
     'node_modules/@fontsource/inter/files/inter-cyrillic-700-normal.woff',
+    'node_modules/@fontsource/inter/files/inter-cyrillic-ext-700-normal.woff',
     'node_modules/@fontsource/inter/files/inter-latin-700-normal.woff',
     'node_modules/@fontsource/inter/files/inter-cyrillic-400-normal.woff',
+    'node_modules/@fontsource/inter/files/inter-cyrillic-ext-400-normal.woff',
     'node_modules/@fontsource/inter/files/inter-latin-400-normal.woff',
     'node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-cyrillic-500-normal.woff',
+    'node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-cyrillic-ext-500-normal.woff',
     'node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff'
   ];
 
@@ -118,8 +121,8 @@ function buildOgSvg({ badge, line1, line2, line3, sub, statLabel, ctaText }) {
     <text x="23" y="31" text-anchor="middle" font-family="Inter, DejaVu Sans, sans-serif" font-size="25" font-weight="700" fill="#8B93F8">K</text>
     <text x="62" y="31" font-family="Inter, DejaVu Sans, sans-serif" font-size="26" font-weight="600" fill="#EDEDEF">KoShorts</text>
 
-    <rect x="210" y="6" width="356" height="34" rx="17" fill="#5E6AD2" fill-opacity="0.14" stroke="#8B93F8" stroke-opacity="0.35"/>
-    <text x="388" y="28" text-anchor="middle" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="14" font-weight="500" fill="#8B93F8">${badge}</text>
+    <rect x="206" y="6" width="388" height="34" rx="17" fill="#5E6AD2" fill-opacity="0.14" stroke="#8B93F8" stroke-opacity="0.35"/>
+    <text x="400" y="28" text-anchor="middle" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="13.5" font-weight="500" fill="#8B93F8">${badge}</text>
   </g>
 
   <!-- Main headline -->
@@ -180,7 +183,7 @@ function buildOgSvg({ badge, line1, line2, line3, sub, statLabel, ctaText }) {
     <g transform="translate(36, 316)">
       <rect width="332" height="88" rx="14" fill="#182533" stroke="#FFFFFF" stroke-opacity="0.1"/>
       <text x="20" y="34" font-family="Inter, DejaVu Sans, sans-serif" font-size="16" font-weight="700" fill="#EDEDEF">@remtex_shorts_ai_bot</text>
-      <text x="20" y="62" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="13" font-weight="500" fill="#8B93F8">10 free · 9:16 · RU / EN</text>
+      <text x="20" y="62" font-family="JetBrains Mono, DejaVu Sans Mono, monospace" font-size="13" font-weight="500" fill="#8B93F8">10 free · 9:16 · UA / RU / EN</text>
     </g>
   </g>
 </svg>`;
@@ -238,6 +241,19 @@ renderSvgToPng(
 
 renderSvgToPng(
   buildOgSvg({
+    badge: '12 ІЗ 50 МІСЦЬ −22% · 10 ВІДЕО БЕЗКОШТОВНО',
+    line1: 'З 1 довгого відео —',
+    line2: '3 вірусні Shorts.',
+    line3: 'За 6 хвилин у Telegram.',
+    sub: 'Послівні субтитри · 9:16 · Автопублікація в YouTube',
+    statLabel: 'переглядів з 1 ролика',
+    ctaText: 'Нарізати безкоштовно'
+  }),
+  path.join(ROOT, 'og-uk.png')
+);
+
+renderSvgToPng(
+  buildOgSvg({
     badge: '12 OF 50 SPOTS −22% · 10 FREE VIDEOS',
     line1: '1 Long Video Into',
     line2: '3 Viral Shorts.',
@@ -249,4 +265,4 @@ renderSvgToPng(
   path.join(ROOT, 'og-en.png')
 );
 
-console.log('Generated favicon.svg, apple-touch-icon.png, og.png, og-en.png');
+console.log('Generated favicon.svg, apple-touch-icon.png, og.png, og-uk.png, og-en.png');

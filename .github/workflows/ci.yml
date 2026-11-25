@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Check EN page sync
+      - name: Check UK & EN page sync
         run: npm run sync:check
 
       - name: Run unit, i18n, CSP & DOM accessibility tests
