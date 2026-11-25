@@ -9,6 +9,7 @@
 
   var YT_ID_RE = /^[\w-]{11}$/;
   var SITE_ORIGIN = 'https://koshorts.vercel.app';
+  var BOT_FREE_URL = 'https://t.me/remtex_shorts_ai_bot?start=free';
 
   // Footer year
   var yearEl = document.getElementById('year');
@@ -16,7 +17,7 @@
     yearEl.textContent = String(new Date().getFullYear());
   }
 
-  // CSP-safe YouTube thumbnail fallback chain (replaces inline onerror attributes)
+  // CSP-safe YouTube thumbnail fallback chain
   function advanceThumb(img) {
     var id = img.getAttribute('data-yt-id');
     if (!id || !YT_ID_RE.test(id)) return;
@@ -35,7 +36,6 @@
       advanceThumb(img);
     });
     img.addEventListener('load', function () {
-      // YouTube returns a 120x90 placeholder image when a resolution variant is missing
       if (img.naturalWidth > 0 && img.naturalWidth <= 120) {
         advanceThumb(img);
       }
@@ -157,6 +157,11 @@
       if (t[k] !== undefined) el.setAttribute('aria-label', t[k]);
     });
 
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function (el) {
+      var k = el.getAttribute('data-i18n-placeholder');
+      if (t[k] !== undefined) el.setAttribute('placeholder', t[k]);
+    });
+
     document.querySelectorAll('iframe[data-title-key]').forEach(function (el) {
       var k = el.getAttribute('data-title-key');
       if (t[k] !== undefined) el.title = t[k];
@@ -189,6 +194,64 @@
         applyLang(b.getAttribute('data-lang'), { persist: true, updateHistory: true });
       });
     });
+  }
+
+  // Hero YouTube Link Launcher (copies pasted URL so user can drop it right into Telegram bot)
+  var tryForm = document.getElementById('try-form');
+  var tryInput = document.getElementById('try-input');
+  var tryToast = document.getElementById('try-toast');
+  if (tryForm && tryInput) {
+    tryForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var val = String(tryInput.value || '').trim();
+      if (val && tryToast) {
+        try {
+          if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+            navigator.clipboard.writeText(val).catch(function () {});
+          }
+        } catch (e) {}
+        tryToast.hidden = false;
+      }
+      if (typeof window.open === 'function') {
+        window.open(BOT_FREE_URL, '_blank', 'noopener');
+      }
+    });
+  }
+
+  // Interactive 4 Subtitle Styles Preview + Live Word-by-Word Karaoke Highlight
+  var phoneMock = document.getElementById('phone-mock');
+  var phoneStylePill = document.getElementById('phone-style-pill');
+  var styleTabs = document.querySelectorAll('.style-tab[data-style-id]');
+  if (phoneMock && styleTabs.length > 0) {
+    styleTabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var styleId = tab.getAttribute('data-style-id') || 'classic';
+        phoneMock.setAttribute('data-active-style', styleId);
+        styleTabs.forEach(function (other) {
+          other.setAttribute('aria-pressed', other === tab ? 'true' : 'false');
+        });
+        if (phoneStylePill) {
+          var key = 'phone_active_' + styleId;
+          phoneStylePill.setAttribute('data-i18n', key);
+          var dict = translations && translations[root.lang];
+          if (dict && dict[key]) {
+            phoneStylePill.textContent = dict[key];
+          }
+        }
+      });
+    });
+
+    var words = phoneMock.querySelectorAll('.cap-word');
+    var reduceMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (words.length > 0 && !reduceMotion) {
+      var activeIdx = 0;
+      setInterval(function () {
+        if (document.hidden) return;
+        words[activeIdx].classList.remove('is-active');
+        activeIdx = (activeIdx + 1) % words.length;
+        words[activeIdx].classList.add('is-active');
+      }, 440);
+    }
   }
 
   // Interactive YouTube embeds (loaded only on click)
@@ -276,7 +339,6 @@
       });
     }
 
-    // Only close on genuine backdrop interactions (not drags starting inside .shorts-viewer-box)
     viewer.addEventListener('pointerdown', function (event) {
       backdropPointerDown = event.target === viewer;
     });
@@ -301,8 +363,8 @@
   // Progressive scroll-reveal for below-the-fold sections only
   var items = document.querySelectorAll('.reveal');
   if (items.length > 0) {
-    var reduceMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion || !('IntersectionObserver' in window)) {
+    var reduce = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) {
       items.forEach(function (el) {
         el.classList.add('in');
       });
@@ -321,7 +383,6 @@
         io.observe(el);
       });
 
-      // Fallback timer so no section stays hidden if observer callbacks are throttled
       setTimeout(function () {
         items.forEach(function (el) {
           el.classList.add('in');

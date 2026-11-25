@@ -33,13 +33,13 @@
 
 ### 1. Изменить остаток мест со скидкой Early Adopter (сейчас `12 из 50`)
 Откройте:
-1. `index.html` — найдите строку с `data-i18n="ea"` и поменяйте число.
-2. `assets/i18n.js` — поменяйте число в ключе `ea` в разделе `ru` (`осталось 12 из 50`) и в разделе `en` (`12 of 50 left`).
-3. `en/index.html` — поменяйте там же (или запустите `npm run sync`).
+1. `assets/i18n.js` — обновите ключи `promo_badge`, `ea_spots` и `final_note` в разделе `ru` (например, `Занято 42 из 50 · Осталось 8 мест`) и в разделе `en` (`42 of 50 claimed · 8 spots left`).
+2. `index.html` — обновите те же строки (`data-i18n="promo_badge"`, `data-i18n="ea_spots"`, `data-i18n="final_note"`), а ширину полоски заполнения при желании подправьте в `assets/styles.css` (`.ea-bar-fill { width: 76%; }`).
+3. Выполните `npm run sync` (или обновите те же числа в `en/index.html`).
 
 ### 2. Изменить цены, курс гривны или цену в Telegram Stars
-- Цены в долларах (`$0`, `$9`, `$29`, `$499`) находятся прямо в `index.html` (и `en/index.html`) в разделе `<!-- PRICING -->`.
-- Пересчёт в гривны и Stars находится в `assets/i18n.js` (ключи `ea`, `cr_eq`, `cr_ea`, `st_eq`, `st_ea`, `tk_uah`) и дублируется в `index.html`.
+- Цены в долларах (`$0`, `$9`, `$29`, `$499`) находятся прямо в `index.html` (и `en/index.html`) в разделе `<!-- PRICING (#pricing) -->`.
+- Пересчёт в гривны, Stars и выгода за 1 Short находятся в `assets/i18n.js` (ключи `cr_eq`, `cr_ea`, `cr_unit`, `st_eq`, `st_ea`, `st_unit`, `tk_uah`) и дублируются в `index.html`.
 
 ### 3. Обновить цифры просмотров Shorts
 Когда просмотры ваших роликов снова вырастут:

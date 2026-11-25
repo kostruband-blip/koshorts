@@ -44,6 +44,11 @@ doc.querySelectorAll('[data-i18n-aria]').forEach((el) => {
   if (t[k] !== undefined) el.setAttribute('aria-label', t[k]);
 });
 
+doc.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+  const k = el.getAttribute('data-i18n-placeholder');
+  if (t[k] !== undefined) el.setAttribute('placeholder', t[k]);
+});
+
 doc.querySelectorAll('.lang button[data-lang]').forEach((b) => {
   b.setAttribute('aria-pressed', b.getAttribute('data-lang') === 'en' ? 'true' : 'false');
 });

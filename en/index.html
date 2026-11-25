@@ -1,9 +1,9 @@
 <!DOCTYPE html><html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KoShorts — Telegram bot that turns long YouTube videos into vertical Shorts with subtitles</title>
-<meta name="description" content="KoShorts is a Telegram bot that cuts long YouTube videos into vertical 9:16 Shorts with word-by-word subtitles in minutes. Free: 10 videos to start, no card.">
-<meta name="theme-color" content="#08090A">
+<title>KoShorts — Turn 1 Long YouTube Video into 3 Viral Shorts in 6 Minutes in Telegram</title>
+<meta name="description" content="KoShorts Telegram bot finds the strongest moments, cuts 9:16 vertical clips, and adds word-by-word captions. Real case: +247,678 views. Start with 10 free videos, no card.">
+<meta name="theme-color" content="#07080B">
 <link rel="canonical" href="https://koshorts.vercel.app/en/">
 <link rel="alternate" hreflang="ru" href="https://koshorts.vercel.app/">
 <link rel="alternate" hreflang="en" href="https://koshorts.vercel.app/en/">
@@ -12,8 +12,8 @@
 <!-- Open Graph / Twitter -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KoShorts">
-<meta property="og:title" content="KoShorts — one long video, three viral Shorts, six minutes">
-<meta property="og:description" content="A Telegram bot that cuts long YouTube videos into vertical Shorts with subtitles. Free: 10 videos to start, no card.">
+<meta property="og:title" content="KoShorts — 1 Long Video into 3 Viral Shorts in 6 Minutes (+248K Views)">
+<meta property="og:description" content="Drop a YouTube link in Telegram — AI cuts vertical 9:16 Shorts with live word-by-word subtitles. 10 free videos to start, no card required.">
 <meta property="og:url" content="https://koshorts.vercel.app/en/">
 <meta property="og:image" content="https://koshorts.vercel.app/og-en.png">
 <meta property="og:image:width" content="1200">
@@ -21,8 +21,8 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="ru_RU">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="KoShorts — one long video, three viral Shorts, six minutes">
-<meta name="twitter:description" content="A Telegram bot that cuts long YouTube videos into vertical Shorts with subtitles. Free: 10 videos to start, no card.">
+<meta name="twitter:title" content="KoShorts — 1 Long Video into 3 Viral Shorts in 6 Minutes (+248K Views)">
+<meta name="twitter:description" content="Drop a YouTube link in Telegram — AI cuts vertical 9:16 Shorts with live word-by-word subtitles. 10 free videos to start, no card required.">
 <meta name="twitter:image" content="https://koshorts.vercel.app/og-en.png">
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -31,11 +31,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link rel="preconnect" href="https://i.ytimg.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css?v=2">
 
-<script src="/assets/i18n.js" defer=""></script>
-<script src="/assets/app.js" defer=""></script>
+<script src="/assets/i18n.js?v=2" defer=""></script>
+<script src="/assets/app.js?v=2" defer=""></script>
 </head>
 <body>
 <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -44,12 +44,17 @@
   <div class="container hdr">
     <a class="logo" href="#top" data-i18n-aria="aria_home" aria-label="KoShorts — home"><span class="logo-mark" aria-hidden="true">K</span><span>KoShorts</span></a>
     <span class="spacer"></span>
-    <nav aria-label="Main navigation" data-i18n-aria="aria_nav"><a class="nav-link" href="#pricing" data-i18n="nav_pricing">Pricing</a></nav>
+    <nav class="hdr-nav" aria-label="Main navigation" data-i18n-aria="aria_nav">
+      <a class="nav-link" href="#demo" data-i18n="nav_case">Case +248K</a>
+      <a class="nav-link" href="#styles" data-i18n="nav_styles">Styles</a>
+      <a class="nav-link" href="#compare" data-i18n="nav_compare">Compare</a>
+      <a class="nav-link" href="#pricing" data-i18n="nav_pricing">Pricing</a>
+    </nav>
     <div class="lang" role="group" aria-label="Language" data-i18n-aria="aria_lang">
       <button type="button" data-lang="ru" aria-pressed="false">RU</button>
       <button type="button" data-lang="en" aria-pressed="true">EN</button>
     </div>
-    <a class="btn btn-primary btn-sm" href="https://t.me/remtex_shorts_ai_bot?start=free" target="_blank" rel="noopener"><span class="cta-long" data-i18n="nav_cta">Open in Telegram</span><span class="cta-short" data-i18n="nav_cta_short">Telegram</span></a>
+    <a class="btn btn-primary btn-sm" href="https://t.me/remtex_shorts_ai_bot?start=free" target="_blank" rel="noopener"><span class="cta-long" data-i18n="nav_cta">Get 10 Free Videos</span><span class="cta-short" data-i18n="nav_cta_short">Start</span></a>
   </div>
 </header>
 
@@ -57,34 +62,53 @@
 <!-- HERO -->
 <div class="hero" id="top">
   <div class="container">
-    <span class="badge" data-i18n="hero_badge">Works right in Telegram · No editing · No Premiere</span>
-    <h1><span data-i18n="hero_h1_lead">One long video. Three viral Shorts.</span> <span class="dim" data-i18n="hero_h1_dim">Six minutes.</span></h1>
-    <p class="sub" data-i18n="hero_sub">Send the bot a YouTube link — it finds the best moments, cuts vertical 9:16 clips and adds word-by-word subtitles.</p>
-    <div class="hero-cta">
-      <a class="btn btn-primary" href="https://t.me/remtex_shorts_ai_bot?start=free" target="_blank" rel="noopener" data-i18n="hero_cta">Try free in Telegram</a>
-      <a class="btn btn-ghost" href="#demo" data-i18n="hero_cta2">See how it works</a>
-    </div>
-    <p class="hero-note mono" data-i18n="hero_note">Free · 10 videos to start · No card</p>
+    <div class="hero-top">
+      <div class="promo-pill">
+        <span class="promo-dot" aria-hidden="true"></span>
+        <span data-i18n="promo_badge">Early Adopter −22%: 12 of 50 spots left · Start with 10 free videos</span>
+      </div>
+      <h1>
+        <span data-i18n="hero_h1_lead">Turn one long YouTube video into 3 viral Shorts.</span>
+        <span class="accent-grad" data-i18n="hero_h1_accent">In 6 minutes inside Telegram.</span>
+      </h1>
+      <p class="sub" data-i18n="hero_sub">Skip late nights in CapCut and Premiere. Send a link to the bot — AI reads the full speech, cuts complete thoughts with a strong hook, reframes to 9:16, and adds word-by-word captions.</p>
 
-    <!-- Telegram mockup with chronological chat flow and click-to-play Shorts -->
-    <div class="mock-wrap">
-      <div class="tg" role="group" data-i18n-aria="aria_mock" aria-label="Telegram chat mockup with the KoShorts bot: a user sends a link and the bot cuts three clips">
-        <div class="tg-bar" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div class="tg-grid">
-          <aside class="tg-side" aria-hidden="true">
-            <div class="chat-item active"><span class="ava ava-brand">K</span><span><b>KoShorts</b><small data-i18n="side_last">Done. 3 clips, 9:16…</small></span></div>
-            <div class="chat-item"><span class="ava ava-saved" data-i18n="ava_saved">S</span><span><b data-i18n="side_saved">Saved</b><small data-i18n="side_saved_s">Video ideas</small></span></div>
-            <div class="chat-item"><span class="ava ava-work" data-i18n="ava_work">W</span><span><b data-i18n="side_work">Work</b><small data-i18n="side_work_s">Send the raw files</small></span></div>
-            <div class="chat-item"><span class="ava ava-fam" data-i18n="ava_fam">F</span><span><b data-i18n="side_fam">Family</b><small data-i18n="side_fam_s">Dinner at seven</small></span></div>
-            <div class="chat-item"><span class="ava ava-mont" data-i18n="ava_mont">E</span><span><b data-i18n="side_mont">Editing</b><small data-i18n="side_mont_s">File sent</small></span></div>
-          </aside>
-          <div class="tg-main">
+      <form class="try-box" id="try-form" action="https://t.me/remtex_shorts_ai_bot" method="get" target="_blank">
+        <input type="hidden" name="start" value="free">
+        <div class="try-input-wrap">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          <input class="try-input" id="try-input" type="url" autocomplete="off" placeholder="Paste a YouTube video link (or jump straight in)..." data-i18n-placeholder="try_ph" data-i18n-aria="aria_try_input" aria-label="Your YouTube video link">
+        </div>
+        <button class="btn btn-primary" type="submit" data-i18n="try_cta">Cut Free in Telegram</button>
+      </form>
+      <p class="try-toast" id="try-toast" role="status" aria-live="polite" hidden="" data-i18n="try_toast">✓ Link copied to clipboard! Paste it into the opened Telegram bot chat.</p>
+
+      <div class="hero-sub-actions">
+        <a class="link-Action" href="#demo" data-i18n="hero_case_link">See the creator case study: +247,678 views from 1 video ↓</a>
+      </div>
+
+      <ul class="trust-pills">
+        <li><span class="trust-check" aria-hidden="true">✓</span><span data-i18n="trust_1">10 free videos right away</span></li>
+        <li><span class="trust-check" aria-hidden="true">✓</span><span data-i18n="trust_2">Links up to 60 min or files up to 1.5 GB</span></li>
+        <li><span class="trust-check" aria-hidden="true">✓</span><span data-i18n="trust_3">No card or auto-charges</span></li>
+      </ul>
+    </div>
+
+    <!-- Visual Transformation Stage: Telegram Chat Input -> 3 Playable 9:16 Shorts -->
+    <div class="stage-wrap">
+      <div class="stage" role="group" data-i18n-aria="aria_mock" aria-label="How KoShorts works: a YouTube link in Telegram turns into three vertical Shorts">
+        <!-- Left: Compact Chronological Telegram Flow -->
+        <div>
+          <div class="stage-col-title">
+            <span data-i18n="stage_left_t">Step 1 · Telegram Bot Chat</span>
+            <span class="stage-pill" data-i18n="stage_left_pill">⚡ Automated in &lt; 6 min</span>
+          </div>
+          <div class="tg">
             <div class="tg-head">
               <span class="ava ava-brand" aria-hidden="true">K</span>
-              <span><b data-i18n="chat_head">KoShorts | Video clipping</b><small data-i18n="chat_sub">bot</small></span>
+              <span><b data-i18n="chat_head">KoShorts | Video Clipping</b><small data-i18n="chat_sub">@remtex_shorts_ai_bot</small></span>
             </div>
             <div class="tg-msgs">
-              <!-- 1. User sends YouTube link (22:38) -->
               <div class="m user" data-msg-step="1">
                 <a class="lnk" href="https://youtu.be/0TZPOmktw2U" target="_blank" rel="noopener">youtu.be/0TZPOmktw2U</a>
                 <a class="vid" href="https://youtu.be/0TZPOmktw2U" target="_blank" rel="noopener" data-i18n-aria="aria_src_video" aria-label="Open the source video on YouTube">
@@ -97,75 +121,72 @@
                 <span class="t">22:38 ✓✓</span>
               </div>
 
-              <!-- 2. Bot asks for subtitle style (22:39) -->
               <div class="m bot" data-msg-step="2">
-                <span data-i18n="style_q">🎨 Choose a clip style:</span><br>
-                <i class="style-note" data-i18n="style_note">(Processing starts after you choose and 1 video is deducted)</i>
-                <div class="ibtns c2">
-                  <span class="ib on" data-i18n="style_1">🟡 Classic Shorts</span>
-                  <span class="ib" data-i18n="style_2">🔥 Bright TikTok</span>
-                  <span class="ib" data-i18n="style_3">🎬 Strict Podcast</span>
-                  <span class="ib" data-i18n="style_4">🌌 Neon / Cyber</span>
-                </div>
+                <span data-i18n="style_q">🎨 Selected style: 🟡 Classic Shorts</span>
                 <span class="t">22:39</span>
               </div>
 
-              <!-- 3. Bot processes video (22:41) -->
               <div class="m bot" data-msg-step="3">
                 <b data-i18n="order">⏳ Order #1f0d2a60:</b>
                 <ul class="status status-list">
-                  <li><span data-i18n="st_1">1️⃣ ✅ Video uploaded</span></li>
-                  <li><span data-i18n="st_2">2️⃣ ✅ Transcript ready</span><span class="mono">0:14</span></li>
-                  <li><span data-i18n="st_3">3️⃣ ✅ Found 3 best moments</span><span class="mono">0:41</span></li>
-                  <li><span data-i18n="st_4">4️⃣ ✅ Render 9:16 + subtitles</span><span class="mono">1:52</span></li>
+                  <li><span data-i18n="st_1">1️⃣ ✅ Video fetched</span></li>
+                  <li><span data-i18n="st_2">2️⃣ ✅ Speech transcript ready</span><span class="mono">0:14</span></li>
+                  <li><span data-i18n="st_3">3️⃣ ✅ Found 3 high-retention hooks</span><span class="mono">0:41</span></li>
+                  <li><span data-i18n="st_4">4️⃣ ✅ Rendered 9:16 + captions</span><span class="mono">1:52</span></li>
                 </ul>
                 <span class="t">22:41</span>
               </div>
 
-              <!-- 4. Bot delivers finished 9:16 Shorts (22:43) -->
               <div class="m bot" data-msg-step="4">
-                <b data-i18n="done">Done. 3 clips, 9:16, RU subtitles.</b>
-                <p class="tg-watch-note" data-i18n="watch_hint">Click a preview to watch the Short.</p>
-                <div class="clips">
-                  <a class="clip" data-short-id="rrxsdUa7pWk" data-title-key="cap1" href="https://youtube.com/shorts/rrxsdUa7pWk" target="_blank" rel="noopener" data-i18n-aria="aria_clip1" aria-label="Watch Short: DIY balancing with a Soviet-era tool">
-                    <span class="frame"><img src="https://i.ytimg.com/vi/rrxsdUa7pWk/oar2.jpg" data-yt-id="rrxsdUa7pWk" data-yt-kind="short" width="405" height="720" alt="" decoding="async"><span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"></path></svg></span></span></span>
-                    <small data-i18n="cap1">DIY balancing with a Soviet-era tool</small>
-                  </a>
-                  <a class="clip" data-short-id="bJmMqcmxC14" data-title-key="cap2" href="https://youtube.com/shorts/bJmMqcmxC14" target="_blank" rel="noopener" data-i18n-aria="aria_clip2" aria-label="Watch Short: Balance a wheel in 5 minutes">
-                    <span class="frame"><img src="https://i.ytimg.com/vi/bJmMqcmxC14/oar2.jpg" data-yt-id="bJmMqcmxC14" data-yt-kind="short" width="405" height="720" alt="" decoding="async"><span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"></path></svg></span></span></span>
-                    <small data-i18n="cap2">Balance a wheel in 5 minutes</small>
-                  </a>
-                  <a class="clip" data-short-id="cAU82a0bf20" data-title-key="cap3" href="https://youtube.com/shorts/cAU82a0bf20" target="_blank" rel="noopener" data-i18n-aria="aria_clip3" aria-label="Watch Short: The secret to placing wheel weights">
-                    <span class="frame"><img src="https://i.ytimg.com/vi/cAU82a0bf20/oar2.jpg" data-yt-id="cAU82a0bf20" data-yt-kind="short" width="405" height="720" alt="" decoding="async"><span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"></path></svg></span></span></span>
-                    <small data-i18n="cap3">The secret to placing wheel weights</small>
-                  </a>
-                </div>
-                <div class="ibtns">
-                  <span class="ib" data-i18n="btn_pub">📤 Publish to YouTube Shorts</span>
-                  <div class="ibtns c2 ibtns-nested">
-                    <span class="ib" data-i18n="btn_dl">💾 Download all</span>
-                    <span class="ib" data-i18n="btn_style">🎨 Another style</span>
-                  </div>
-                </div>
+                <b data-i18n="done">🔥 Done! 3 vertical Shorts with word-by-word captions delivered to chat.</b>
                 <span class="t">22:43</span>
               </div>
             </div>
-            <!-- Bot reply keyboard -->
-            <div class="tg-kb">
-              <div class="kb">
-                <span data-i18n="kb_1">💰 My balance</span>
-                <span data-i18n="kb_2">💳 Buy a plan</span>
-                <span data-i18n="kb_3">🎁 Invite bonuses</span>
-                <span data-i18n="kb_4">ℹ️ How it works</span>
-                <span data-i18n="kb_5">👨‍💼 Support</span>
-                <span data-i18n="kb_6">🌐 Language: EN</span>
-              </div>
+          </div>
+        </div>
+
+        <!-- Right: 3 Real Click-to-Play 9:16 Vertical Shorts -->
+        <div class="stage-results">
+          <div>
+            <div class="stage-col-title">
+              <span data-i18n="stage_right_t">Step 2 · Finished Clips (click any preview to watch)</span>
+              <span class="stage-pill" data-i18n="stage_right_pill">+247,678 total views</span>
             </div>
-            <div class="tg-input" aria-hidden="true">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5l-8.8 8.8a5 5 0 01-7-7l9-9a3.3 3.3 0 014.7 4.7l-9 9a1.7 1.7 0 01-2.4-2.4l8.3-8.3"></path></svg>
-              <span data-i18n="msg_ph">Message...</span>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"></rect><path d="M5 11a7 7 0 0014 0M12 18v3"></path></svg>
+            <div class="hero-shorts">
+              <a class="clip clip-featured" data-short-id="rrxsdUa7pWk" data-title-key="cap1" href="https://youtube.com/shorts/rrxsdUa7pWk" target="_blank" rel="noopener" data-i18n-aria="aria_clip1" aria-label="Watch Short: DIY balancing with a Soviet-era tool (230K views)">
+                <span class="frame">
+                  <span class="clip-views-badge">🔥 230K</span>
+                  <img src="https://i.ytimg.com/vi/rrxsdUa7pWk/oar2.jpg" data-yt-id="rrxsdUa7pWk" data-yt-kind="short" width="405" height="720" alt="" decoding="async">
+                  <span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"></path></svg></span></span>
+                  <span class="clip-sub-pill" data-i18n="sub_pill_1">SOVIET DIY TOOL</span>
+                </span>
+                <small data-i18n="cap1">DIY balancing with a Soviet-era tool</small>
+              </a>
+
+              <a class="clip" data-short-id="bJmMqcmxC14" data-title-key="cap2" href="https://youtube.com/shorts/bJmMqcmxC14" target="_blank" rel="noopener" data-i18n-aria="aria_clip2" aria-label="Watch Short: Balance a wheel in 5 minutes (5.6K views)">
+                <span class="frame">
+                  <span class="clip-views-badge">▶ 5.6K</span>
+                  <img src="https://i.ytimg.com/vi/bJmMqcmxC14/oar2.jpg" data-yt-id="bJmMqcmxC14" data-yt-kind="short" width="405" height="720" alt="" decoding="async">
+                  <span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"></path></svg></span></span>
+                  <span class="clip-sub-pill" data-i18n="sub_pill_2">5 MIN AT HOME</span>
+                </span>
+                <small data-i18n="cap2">Balance a wheel in 5 minutes</small>
+              </a>
+
+              <a class="clip" data-short-id="cAU82a0bf20" data-title-key="cap3" href="https://youtube.com/shorts/cAU82a0bf20" target="_blank" rel="noopener" data-i18n-aria="aria_clip3" aria-label="Watch Short: The secret to placing wheel weights (11.6K views)">
+                <span class="frame">
+                  <span class="clip-views-badge">⚡ 11.6K</span>
+                  <img src="https://i.ytimg.com/vi/cAU82a0bf20/oar2.jpg" data-yt-id="cAU82a0bf20" data-yt-kind="short" width="405" height="720" alt="" decoding="async">
+                  <span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"></path></svg></span></span>
+                  <span class="clip-sub-pill" data-i18n="sub_pill_3">WEIGHT SECRET</span>
+                </span>
+                <small data-i18n="cap3">The secret to placing wheel weights</small>
+              </a>
             </div>
+          </div>
+          <div class="stage-foot">
+            <strong data-i18n="stage_foot_l">Verified YouTube Studio stats on @rem-tex</strong>
+            <span data-i18n="stage_foot_r">Click any clip to watch with sound</span>
           </div>
         </div>
       </div>
@@ -173,80 +194,124 @@
   </div>
 </div>
 
-<!-- STATS -->
+<!-- PROOF STATS -->
 <div class="stats">
   <div class="container reveal">
     <div class="stats-grid">
-      <div class="stat"><div class="n">230K</div><div class="l" data-i18n="stat1">views on a single Short</div></div>
-      <div class="stat"><div class="n">4</div><div class="l" data-i18n="stat2">subtitle styles</div></div>
-      <div class="stat"><div class="n">&lt; 6 <span data-i18n="min">min</span></div><div class="l" data-i18n="stat3">to process a video</div></div>
+      <div class="stat stat-highlight"><div class="n" data-i18n="stat1_n">+247.7K</div><div class="l" data-i18n="stat1">new Shorts views generated from 1 archived long video</div></div>
+      <div class="stat"><div class="n" data-i18n="stat2_n">&lt; 6 min</div><div class="l" data-i18n="stat2">from dropping a YouTube link to 3 finished 9:16 clips</div></div>
+      <div class="stat"><div class="n" data-i18n="stat3_n">~3.7 UAH</div><div class="l" data-i18n="stat3">cost per watermark-free Short with the −22% Early Adopter deal</div></div>
+      <div class="stat"><div class="n" data-i18n="stat4_n">0 hrs</div><div class="l" data-i18n="stat4">spent on manual timelines, reframing, or fixing captions</div></div>
     </div>
-    <p class="stats-src"><span data-i18n="stats_src">Real case from the author:</span> <a href="https://www.youtube.com/@rem-tex" target="_blank" rel="noopener">youtube.com/@rem-tex</a></p>
   </div>
 </div>
 
-<!-- HOW -->
-<section id="how" aria-labelledby="how-t">
+<!-- INTERACTIVE 4 CAPTION STYLES PREVIEW -->
+<section id="styles" aria-labelledby="styles-t">
   <div class="container">
     <div class="sec-head reveal">
-      <div class="eyebrow" data-i18n="how_eyebrow">How it works</div>
-      <h2 class="sec-title" id="how-t" data-i18n="how_title">Three steps to a finished Short</h2>
+      <div class="eyebrow" data-i18n="styles_eyebrow">Interactive Caption Preview</div>
+      <h2 class="sec-title" id="styles-t" data-i18n="styles_title">4 word-by-word subtitle styles — click to preview live</h2>
+      <p class="sec-sub" data-i18n="styles_sub">Every spoken word lights up in sync with the speaker’s voice (Hormozi style), keeping viewers hooked to the final second. Switch styles in one tap inside the bot.</p>
     </div>
-    <div class="steps">
-      <div class="step reveal"><span class="num">01</span><h3 data-i18n="s1_t">Send a video</h3><p data-i18n="s1_d">A link to a video up to 60 minutes or a file up to 1.5 GB — right in the bot chat.</p></div>
-      <div class="step reveal"><span class="num">02</span><h3 data-i18n="s2_t">Pick a style</h3><p data-i18n="s2_d">Choose one of 4 styles — AI cuts the best moments and adds subtitles.</p></div>
-      <div class="step reveal"><span class="num">03</span><h3 data-i18n="s3_t">Publish or download</h3><p data-i18n="s3_d">Publish to Shorts with one button or download the finished clips.</p></div>
+
+    <div class="styles-showcase reveal">
+      <div class="style-tabs" role="group" aria-labelledby="styles-t">
+        <button type="button" class="style-tab" data-style-id="classic" aria-pressed="true">
+          <span class="style-tab-icon" aria-hidden="true">🟡</span>
+          <span class="style-tab-body">
+            <b data-i18n="st_tab1_t">Classic Shorts</b>
+            <span data-i18n="st_tab1_d">Bold white display type with a vivid yellow active-word pop. Proven retention leader for DIY, tutorials, automotive, and reviews.</span>
+          </span>
+        </button>
+
+        <button type="button" class="style-tab" data-style-id="tiktok" aria-pressed="false">
+          <span class="style-tab-icon" aria-hidden="true">🔥</span>
+          <span class="style-tab-body">
+            <b data-i18n="st_tab2_t">Bright TikTok</b>
+            <span data-i18n="st_tab2_d">Punchy red highlight badge jumping word-by-word to speech tempo. Stops cold-feed scrollers instantly, even on mute.</span>
+          </span>
+        </button>
+
+        <button type="button" class="style-tab" data-style-id="podcast" aria-pressed="false">
+          <span class="style-tab-icon" aria-hidden="true">🎬</span>
+          <span class="style-tab-body">
+            <b data-i18n="st_tab3_t">Strict Podcast</b>
+            <span data-i18n="st_tab3_d">Clean frosted editorial card with crisp contrast. Built for interviews, founders, commentary, and business channels.</span>
+          </span>
+        </button>
+
+        <button type="button" class="style-tab" data-style-id="neon" aria-pressed="false">
+          <span class="style-tab-icon" aria-hidden="true">🌌</span>
+          <span class="style-tab-body">
+            <b data-i18n="st_tab4_t">Neon / Cyber</b>
+            <span data-i18n="st_tab4_d">Electric cyan glow engineered for tech reviews, gaming, night shots, and high-energy clips.</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="phone-stage">
+        <div class="phone-mock" id="phone-mock" data-active-style="classic">
+          <img src="https://i.ytimg.com/vi/rrxsdUa7pWk/oar2.jpg" data-yt-id="rrxsdUa7pWk" data-yt-kind="short" width="405" height="720" alt="" loading="lazy" decoding="async">
+          <div class="phone-overlay">
+            <div class="phone-top">
+              <span class="phone-style-pill" id="phone-style-pill" data-i18n="phone_active_classic">🟡 Classic Shorts</span>
+              <span>9:16</span>
+            </div>
+            <div class="caption-live" aria-hidden="true">
+              <span class="cap-word is-active" data-i18n="w1">Here</span>
+              <span class="cap-word" data-i18n="w2">is</span>
+              <span class="cap-word" data-i18n="w3">how</span>
+              <span class="cap-word" data-i18n="w4">to</span>
+              <span class="cap-word" data-i18n="w5">balance</span>
+              <span class="cap-word" data-i18n="w6">wheels</span>
+              <span class="cap-word" data-i18n="w7">at</span>
+              <span class="cap-word" data-i18n="w8">home</span>
+            </div>
+          </div>
+        </div>
+        <p class="phone-caption-note" data-i18n="phone_note">Words highlight automatically in sync with spoken audio</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section id="features" class="sec-compact" aria-labelledby="feat-t">
-  <div class="container">
-    <div class="sec-head reveal">
-      <div class="eyebrow" data-i18n="feat_eyebrow">Features</div>
-      <h2 class="sec-title" id="feat-t" data-i18n="feat_title">Everything your clips need to perform</h2>
-    </div>
-    <div class="feats">
-      <article class="feat reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M4 12h16M4 17h7"></path><circle cx="18" cy="7" r="2"></circle></svg><h3 data-i18n="f1_t">Smart cutting by transcript</h3><p data-i18n="f1_d">AI reads the whole speech and cuts complete thoughts with a strong opening — not random chunks.</p></article>
-      <article class="feat reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="M7 14h4M13 14h4M7 10h2"></path></svg><h3 data-i18n="f2_t">Word-by-word auto subtitles</h3><p data-i18n="f2_d">Words highlight in sync with speech — Hormozi style. Keeps viewers watching to the end.</p></article>
-      <article class="feat reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="8" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect><rect x="13" y="13" width="8" height="8" rx="2"></rect></svg><h3 data-i18n="f3_t">4 caption styles</h3><p data-i18n="f3_d">Classic, TikTok, Podcast, Neon — pick one for your niche and switch in a click.</p></article>
-      <article class="feat reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.5"></rect><path d="M10 6h4"></path></svg><h3 data-i18n="f4_t">Vertical 9:16 format</h3><p data-i18n="f4_d">Reframed for Shorts, Reels and TikTok. Post the finished clip right away.</p></article>
-      <article class="feat reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"></path></svg><h3 data-i18n="f5_t">Auto-publish to YouTube Shorts</h3><p data-i18n="f5_d">On Creator and Studio — publish to your channel straight from the bot, no manual upload.</p></article>
-      <article class="feat reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M5.6 5.6l12.8 12.8"></path></svg><h3 data-i18n="f6_t">No watermarks</h3><p data-i18n="f6_d">On paid plans clips come out clean — no logos or badges over your video.</p></article>
-    </div>
-  </div>
-</section>
-
-<!-- DEMO -->
+<!-- REAL CASE STUDY (#demo) -->
 <section id="demo" class="sec-compact" aria-labelledby="demo-t">
   <div class="container">
     <div class="sec-head reveal">
-      <div class="eyebrow" data-i18n="demo_eyebrow">Demo</div>
-      <h2 class="sec-title" id="demo-t" data-i18n="demo_title">Before: 8 minutes. After: three Shorts.</h2>
-      <p class="sec-sub" data-i18n="demo_sub">A real video and three Shorts made from it. Click a preview to watch.</p>
+      <div class="eyebrow" data-i18n="demo_eyebrow">Verified YouTube Studio Case Study</div>
+      <h2 class="sec-title" id="demo-t" data-i18n="demo_title">An archived 2020 video sat idle — then pulled +247,678 Shorts views</h2>
+      <p class="sec-sub" data-i18n="demo_sub">Every creator has dozens of older videos sitting on their channel. Watch the real 8-minute source video and the three Shorts the bot cut from it without filming anything new.</p>
     </div>
+
+    <div class="case-banner reveal">
+      <span><span data-i18n="case_banner_l">Combined reach of the 3 clips: 230,494 + 11,624 + 5,560 =</span> <strong data-i18n="case_banner_num">247,678 views</strong></span>
+      <a href="https://www.youtube.com/@rem-tex" target="_blank" rel="noopener" data-i18n="case_banner_link">Creator channel: youtube.com/@rem-tex →</a>
+    </div>
+
     <div class="demo-grid">
       <div class="panel reveal">
-        <div class="panel-label" data-i18n="demo_src">Source</div>
+        <div class="panel-label" data-i18n="demo_src">Source (8:22 archive video)</div>
         <div class="player" data-video-id="0TZPOmktw2U" id="player">
           <img src="https://i.ytimg.com/vi/0TZPOmktw2U/maxresdefault.jpg" data-yt-id="0TZPOmktw2U" data-yt-kind="video" width="1280" height="720" alt="" loading="lazy" decoding="async">
           <button type="button" data-i18n-aria="aria_play" aria-label="Play the source video"><span class="pbtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"></path></svg></span></button>
         </div>
         <p class="caption"><span data-i18n="demo_cap_prefix">How to balance wheels at home · 8:22 · 274K views ·</span> <a href="https://www.youtube.com/@rem-tex" target="_blank" rel="noopener">@rem-tex</a></p>
       </div>
+
       <div class="panel res reveal">
-        <div class="panel-label" data-i18n="demo_res">Result</div>
+        <div class="panel-label" data-i18n="demo_res">Bot Output (3 clips in 9:16)</div>
         <div class="shorts">
-          <a class="sh" data-short-id="rrxsdUa7pWk" data-title-key="cap1" href="https://youtube.com/shorts/rrxsdUa7pWk" target="_blank" rel="noopener" data-i18n-aria="aria_clip1" aria-label="Watch Short: DIY balancing with a Soviet-era tool">
+          <a class="sh" data-short-id="rrxsdUa7pWk" data-title-key="cap1" href="https://youtube.com/shorts/rrxsdUa7pWk" target="_blank" rel="noopener" data-i18n-aria="aria_clip1" aria-label="Watch Short: DIY balancing with a Soviet-era tool (230K views)">
             <span class="frame"><img src="https://i.ytimg.com/vi/rrxsdUa7pWk/oar2.jpg" data-yt-id="rrxsdUa7pWk" data-yt-kind="short" width="405" height="720" alt="" loading="lazy" decoding="async"><span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"></path></svg></span></span></span>
             <span class="meta"><b data-i18n="cap1">DIY balancing with a Soviet-era tool</b>00:31 · <span class="hot">230K</span> <span data-i18n="views">views</span></span>
           </a>
-          <a class="sh" data-short-id="bJmMqcmxC14" data-title-key="cap2" href="https://youtube.com/shorts/bJmMqcmxC14" target="_blank" rel="noopener" data-i18n-aria="aria_clip2" aria-label="Watch Short: Balance a wheel in 5 minutes">
+          <a class="sh" data-short-id="bJmMqcmxC14" data-title-key="cap2" href="https://youtube.com/shorts/bJmMqcmxC14" target="_blank" rel="noopener" data-i18n-aria="aria_clip2" aria-label="Watch Short: Balance a wheel in 5 minutes (5.6K views)">
             <span class="frame"><img src="https://i.ytimg.com/vi/bJmMqcmxC14/oar2.jpg" data-yt-id="bJmMqcmxC14" data-yt-kind="short" width="405" height="720" alt="" loading="lazy" decoding="async"><span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"></path></svg></span></span></span>
             <span class="meta"><b data-i18n="cap2">Balance a wheel in 5 minutes</b>00:30 · <span class="hot">5.6K</span> <span data-i18n="views">views</span></span>
           </a>
-          <a class="sh" data-short-id="cAU82a0bf20" data-title-key="cap3" href="https://youtube.com/shorts/cAU82a0bf20" target="_blank" rel="noopener" data-i18n-aria="aria_clip3" aria-label="Watch Short: The secret to placing wheel weights">
+          <a class="sh" data-short-id="cAU82a0bf20" data-title-key="cap3" href="https://youtube.com/shorts/cAU82a0bf20" target="_blank" rel="noopener" data-i18n-aria="aria_clip3" aria-label="Watch Short: The secret to placing wheel weights (11.6K views)">
             <span class="frame"><img src="https://i.ytimg.com/vi/cAU82a0bf20/oar2.jpg" data-yt-id="cAU82a0bf20" data-yt-kind="short" width="405" height="720" alt="" loading="lazy" decoding="async"><span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"></path></svg></span></span></span>
             <span class="meta"><b data-i18n="cap3">The secret to placing wheel weights</b>00:48 · <span class="hot">11.6K</span> <span data-i18n="views">views</span></span>
           </a>
@@ -256,69 +321,157 @@
   </div>
 </section>
 
-<!-- PRICING -->
+<!-- PAIN VS GAIN COMPARISON (#compare) -->
+<section id="compare" class="sec-compact" aria-labelledby="cmp-t">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow" data-i18n="cmp_eyebrow">Value Comparison</div>
+      <h2 class="sec-title" id="cmp-t" data-i18n="cmp_title">Spend your evening in CapCut — or 6 minutes in Telegram?</h2>
+    </div>
+
+    <div class="compare-grid">
+      <article class="cmp-card cmp-bad reveal">
+        <span class="cmp-tag" data-i18n="cmp_bad_tag">The Old Way</span>
+        <h3 data-i18n="cmp_bad_t">Manual editing or hiring an editor</h3>
+        <ul class="cmp-list">
+          <li><span class="cmp-ico" aria-hidden="true">✕</span><span data-i18n="cmp_bad_1">Rewatching 40–60 minutes of raw footage to hunt for hooks</span></li>
+          <li><span class="cmp-ico" aria-hidden="true">✕</span><span data-i18n="cmp_bad_2">Cutting silences, keyframing 9:16 crop, and aligning audio tracks by hand</span></li>
+          <li><span class="cmp-ico" aria-hidden="true">✕</span><span data-i18n="cmp_bad_3">Fixing auto-caption typos and styling word animations manually</span></li>
+          <li><span class="cmp-ico" aria-hidden="true">✕</span><span data-i18n="cmp_bad_4">Exporting heavy files to your phone and uploading one by one</span></li>
+        </ul>
+        <div class="cmp-total" data-i18n="cmp_bad_total">Result: 2–4 hours of your evening or $10–20 per clip to a freelancer</div>
+      </article>
+
+      <article class="cmp-card cmp-good reveal">
+        <span class="cmp-tag" data-i18n="cmp_good_tag">With KoShorts Bot</span>
+        <h3 data-i18n="cmp_good_t">Automated right inside Telegram</h3>
+        <ul class="cmp-list">
+          <li><span class="cmp-ico" aria-hidden="true">✓</span><span data-i18n="cmp_good_1">Send a YouTube link (up to 60 min) or video file (up to 1.5 GB) in chat</span></li>
+          <li><span class="cmp-ico" aria-hidden="true">✓</span><span data-i18n="cmp_good_2">AI reads the full transcript and extracts complete, high-retention moments</span></li>
+          <li><span class="cmp-ico" aria-hidden="true">✓</span><span data-i18n="cmp_good_3">Ready-to-post 9:16 framing and synced word-by-word captions automatically</span></li>
+          <li><span class="cmp-ico" aria-hidden="true">✓</span><span data-i18n="cmp_good_4">Publish straight to your YouTube Shorts channel with one button</span></li>
+        </ul>
+        <div class="cmp-total" data-i18n="cmp_good_total">Result: 6 minutes total · $0 to start (~3.7 UAH / Short on Creator)</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR & FEATURES (#features) -->
+<section id="features" class="sec-compact" aria-labelledby="feat-t">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow" data-i18n="feat_eyebrow">Who It’s For &amp; Capabilities</div>
+      <h2 class="sec-title" id="feat-t" data-i18n="feat_title">Built by a practicing YouTube creator for real channel growth</h2>
+    </div>
+
+    <div class="personas">
+      <article class="persona reveal">
+        <div class="persona-tag" data-i18n="p1_tag">01 · YOUTUBE CREATORS</div>
+        <h3 data-i18n="p1_t">Turn back-catalog videos into traffic</h3>
+        <p data-i18n="p1_d">Transform existing reviews, tutorials, and DIY uploads into daily Shorts that funnel new subscribers back to your main channel.</p>
+      </article>
+      <article class="persona reveal">
+        <div class="persona-tag" data-i18n="p2_tag">02 · EXPERTS &amp; PODCASTERS</div>
+        <h3 data-i18n="p2_t">2 weeks of clips from 1 recording</h3>
+        <p data-i18n="p2_d">One 60-minute podcast, webinar, or interview becomes a batch of vertical clips ready for YouTube Shorts, Reels, and TikTok.</p>
+      </article>
+      <article class="persona reveal">
+        <div class="persona-tag" data-i18n="p3_tag">03 · MULTI-CHANNEL STUDIOS</div>
+        <h3 data-i18n="p3_t">Scale output without an editing team</h3>
+        <p data-i18n="p3_d">Up to 300 finished Shorts per 30 days, multi-channel publishing, and API access straight from Telegram.</p>
+      </article>
+    </div>
+
+    <div class="feats">
+      <article class="feat reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M4 12h16M4 17h7"></path><circle cx="18" cy="7" r="2"></circle></svg><h3 data-i18n="f1_t">Context-aware transcript cutting</h3><p data-i18n="f1_d">AI reads the entire speech to capture complete thoughts with strong openings — never slicing mid-sentence.</p></article>
+      <article class="feat reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="M7 14h4M13 14h4M7 10h2"></path></svg><h3 data-i18n="f2_t">Word-by-word karaoke captions</h3><p data-i18n="f2_d">Real-time word highlighting keeps silent-feed viewers watching all the way to the end.</p></article>
+      <article class="feat reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="8" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect><rect x="13" y="13" width="8" height="8" rx="2"></rect></svg><h3 data-i18n="f3_t">One-click style switching</h3><p data-i18n="f3_d">Want a different vibe? Tap “Another style” right under your finished order in the bot to switch between 4 presets.</p></article>
+      <article class="feat reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.5"></rect><path d="M10 6h4"></path></svg><h3 data-i18n="f4_t">Native 9:16 vertical framing</h3><p data-i18n="f4_d">Cropped for YouTube Shorts, Instagram Reels, and TikTok — ready to publish immediately.</p></article>
+      <article class="feat reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"></path></svg><h3 data-i18n="f5_t">Direct YouTube Shorts publishing</h3><p data-i18n="f5_d">On Creator and Studio plans, connect your channel once and publish finished clips in a single tap.</p></article>
+      <article class="feat reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M5.6 5.6l12.8 12.8"></path></svg><h3 data-i18n="f6_t">Clean watermark-free exports</h3><p data-i18n="f6_d">Paid plans deliver 100% clean videos with zero third-party logos or overlays.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING (#pricing) -->
 <section id="pricing" class="sec-compact" aria-labelledby="price-t">
   <div class="container">
     <div class="sec-head reveal">
-      <div class="eyebrow" data-i18n="price_eyebrow">Pricing</div>
-      <h2 class="sec-title" id="price-t" data-i18n="price_title">Start free. Pay when you grow.</h2>
-      <p class="sec-sub" data-i18n="price_sub">Pay by card in UAH or with Telegram Stars. No hidden fees.</p>
+      <div class="eyebrow" data-i18n="price_eyebrow">Simple Pricing</div>
+      <h2 class="sec-title" id="price-t" data-i18n="price_title">Test on 10 videos free. Upgrade when you see the views.</h2>
+      <p class="sec-sub" data-i18n="price_sub">Pay by bank card in UAH or with Telegram Stars. Cancel anytime in 1 click inside the bot.</p>
     </div>
 
-    <div class="ea reveal" data-i18n="ea">🎉 Early Adopter: −22% for the first 50 customers (12 of 50 left) — Creator 329 UAH / 460 Stars, Studio 1079 UAH / 1500 Stars.</div>
+    <div class="ea reveal">
+      <div class="ea-top">
+        <span data-i18n="ea_main">🎉 Early Adopter −22% discount for the first 50 customers</span>
+        <span class="ea-spots" data-i18n="ea_spots">38 of 50 claimed · 12 spots left</span>
+      </div>
+      <div class="ea-bar" aria-hidden="true"><div class="ea-bar-fill"></div></div>
+    </div>
 
     <div class="plans">
       <article class="plan reveal">
         <h3>Free</h3>
         <div class="price">$0</div>
-        <div class="eq" data-i18n="free_eq">No card</div>
+        <div class="eq" data-i18n="free_eq">$0 · No card required</div>
+        <span class="unit-cost" data-i18n="free_unit">Up to 20 finished Shorts free</span>
         <ul>
-          <li data-i18n="free_1">10 videos to start (one-time)</li>
-          <li data-i18n="free_2">2 Shorts per video</li>
-          <li data-i18n="free_3">With watermark</li>
-          <li data-i18n="free_4">No card required</li>
+          <li data-i18n="free_1">10 videos at start (one-time)</li>
+          <li data-i18n="free_2">2 Shorts generated per video</li>
+          <li data-i18n="free_3">All 4 word-by-word caption styles</li>
+          <li data-i18n="free_4">With watermark · No card needed</li>
         </ul>
-        <a class="btn btn-ghost btn-block" href="https://t.me/remtex_shorts_ai_bot?start=free" target="_blank" rel="noopener" data-i18n="free_cta">Start free</a>
+        <a class="btn btn-ghost btn-block" href="https://t.me/remtex_shorts_ai_bot?start=free" target="_blank" rel="noopener" data-i18n="free_cta">Claim 10 Free Videos</a>
       </article>
 
       <article class="plan pop reveal">
-        <span class="pop-badge" data-i18n="popular">Popular</span>
+        <span class="pop-badge" data-i18n="popular">Creator Pick</span>
         <h3>Creator</h3>
         <div class="price">$9<small data-i18n="per30">/ 30 days</small></div>
-        <div class="eq"><span data-i18n="cr_eq">≈ 423 UAH / 590 Stars</span><span class="eq-ea" data-i18n="cr_ea">Early Adopter: 329 UAH / 460 Stars</span></div>
+        <div class="eq">
+          <span class="eq-old" data-i18n="cr_eq">Regular: 423 UAH / 590 Stars</span>
+          <span class="eq-ea" data-i18n="cr_ea">Early Adopter (−22%): 329 UAH / 460 Stars</span>
+        </div>
+        <span class="unit-cost" data-i18n="cr_unit">Best value: ~3.7 UAH per Short</span>
         <ul>
           <li data-i18n="cr_1">30 videos for 30 days</li>
           <li data-i18n="cr_2">Up to 3 Shorts per video (up to 90 Shorts)</li>
           <li data-i18n="cr_3">No watermark</li>
           <li data-i18n="cr_4">Auto-publish to YouTube Shorts</li>
         </ul>
-        <a class="btn btn-primary btn-block" href="https://t.me/remtex_shorts_ai_bot?start=creator" target="_blank" rel="noopener" data-i18n="cr_cta">Choose Creator</a>
+        <a class="btn btn-primary btn-block" href="https://t.me/remtex_shorts_ai_bot?start=creator" target="_blank" rel="noopener" data-i18n="cr_cta">Get Creator (−22% Off)</a>
       </article>
 
       <article class="plan reveal">
         <h3>Studio</h3>
         <div class="price">$29<small data-i18n="per30">/ 30 days</small></div>
-        <div class="eq"><span data-i18n="st_eq">≈ 1363 UAH / 1890 Stars</span><span class="eq-ea" data-i18n="st_ea">Early Adopter: 1079 UAH / 1500 Stars</span></div>
+        <div class="eq">
+          <span class="eq-old" data-i18n="st_eq">Regular: 1363 UAH / 1890 Stars</span>
+          <span class="eq-ea" data-i18n="st_ea">Early Adopter (−22%): 1079 UAH / 1500 Stars</span>
+        </div>
+        <span class="unit-cost" data-i18n="st_unit">Scale: ~3.6 UAH per Short</span>
         <ul>
           <li data-i18n="stu_1">Up to 100 videos for 30 days (up to 300 Shorts)</li>
           <li data-i18n="stu_2">No watermark</li>
           <li data-i18n="stu_3">Auto-publish to YouTube Shorts</li>
-          <li data-i18n="stu_4">API access</li>
-          <li data-i18n="stu_5">Multi-channel</li>
+          <li data-i18n="stu_4">Multi-channel support</li>
+          <li data-i18n="stu_5">API access for automation</li>
         </ul>
-        <a class="btn btn-ghost btn-block" href="https://t.me/remtex_shorts_ai_bot?start=studio" target="_blank" rel="noopener" data-i18n="stu_cta">Choose Studio</a>
+        <a class="btn btn-ghost btn-block" href="https://t.me/remtex_shorts_ai_bot?start=studio" target="_blank" rel="noopener" data-i18n="stu_cta">Get Studio (−22% Off)</a>
       </article>
     </div>
 
     <div class="turnkey reveal">
       <div>
-        <h3 data-i18n="tk_t">Don’t want to do it yourself?</h3>
-        <p><strong class="tk-strong" data-i18n="tk_s">Done-for-you channel management:</strong> <span data-i18n="tk_d">strategy, clipping, subtitles, publishing, analytics.</span></p>
-        <p class="tk-note" data-i18n="tk_note">In the bot choose “Channel management” — we’ll get in touch</p>
+        <h3 data-i18n="tk_t">Want us to run the channel for you?</h3>
+        <p><strong class="tk-strong" data-i18n="tk_s">Done-for-you YouTube Shorts / Reels management:</strong> <span data-i18n="tk_d">content strategy, source selection, clipping, caption styling, consistent publishing, and analytics reviews.</span></p>
+        <p class="tk-note" data-i18n="tk_note">Tap below and choose “Channel management” in the bot — we’ll scope your channel goals</p>
       </div>
       <div>
         <div class="tk-price"><span data-i18n="tk_from">from $499/mo</span><small data-i18n="tk_uah">≈ 23,453 UAH</small></div>
-        <a class="btn btn-primary btn-block tk-cta" href="https://t.me/remtex_shorts_ai_bot?start=turnkey" target="_blank" rel="noopener" data-i18n="tk_cta">Request service</a>
+        <a class="btn btn-primary btn-block tk-cta" href="https://t.me/remtex_shorts_ai_bot?start=turnkey" target="_blank" rel="noopener" data-i18n="tk_cta">Request Done-For-You Service</a>
       </div>
     </div>
   </div>
@@ -329,15 +482,15 @@
   <div class="container">
     <div class="sec-head faq-head reveal">
       <div class="eyebrow" data-i18n="faq_eyebrow">FAQ</div>
-      <h2 class="sec-title" id="faq-t" data-i18n="faq_title">Frequently asked questions</h2>
+      <h2 class="sec-title" id="faq-t" data-i18n="faq_title">Everything you need to know before starting</h2>
     </div>
     <div class="faq reveal">
-      <details><summary data-i18n="q1">How does the free plan work?</summary><p data-i18n="a1">You get 10 videos at start — one time. The bot makes 2 Shorts from each video. Clips carry a watermark. No card needed.</p></details>
-      <details><summary data-i18n="q2">Do I need to edit anything?</summary><p data-i18n="a2">No. The bot finds the moments, reframes the video to 9:16 and adds subtitles. You just pick a style and publish.</p></details>
-      <details><summary data-i18n="q3">Which subtitle styles are available?</summary><p data-i18n="a3">Four styles: Classic, TikTok, Podcast and Neon. Subtitles are word-by-word — words highlight in sync with speech. Switch with the “Another style” button.</p></details>
-      <details><summary data-i18n="q4">Can I upload my own files?</summary><p data-i18n="a4">Yes. Send a video link (up to 60 minutes) or upload a file up to 1.5 GB right in the bot chat.</p></details>
-      <details><summary data-i18n="q5">How is KoShorts different from Opus Clip?</summary><p data-i18n="a5">KoShorts lives right in Telegram — no web editor to open or configure. You can pay in UAH or Stars, and there is a free start with no card. It is built by a practicing YouTube creator for real creator workflows.</p></details>
-      <details><summary data-i18n="q6">How do I cancel my subscription?</summary><p data-i18n="a6">Cancel in one click inside the bot — no calls or emails. The paid period stays active until the end of its 30 days.</p></details>
+      <details><summary data-i18n="q1">Is the free starter pack really free with no card?</summary><p data-i18n="a1">Yes! As soon as you open @remtex_shorts_ai_bot, you get 10 free videos one-time (up to 20 finished watermarked Shorts). No bank card is ever asked to test.</p></details>
+      <details><summary data-i18n="q2">Do I have to edit or sync subtitles manually?</summary><p data-i18n="a2">Not at all. Send a video link or file, tap 1 of the 4 caption styles, and receive finished 9:16 vertical clips with synced word-by-word subtitles in minutes.</p></details>
+      <details><summary data-i18n="q3">What kind of videos can I send to the bot?</summary><p data-i18n="a3">Any YouTube video link up to 60 minutes long, or a direct video file upload up to 1.5 GB right inside the Telegram chat (tutorials, podcasts, streams, reviews).</p></details>
+      <details><summary data-i18n="q4">How is KoShorts better than web editors like Opus Clip?</summary><p data-i18n="a4">Zero complex web dashboards to learn — everything runs right inside Telegram on phone or desktop, with local UAH bank card or Telegram Stars checkout and a generous 10-video free start.</p></details>
+      <details><summary data-i18n="q5">How does direct YouTube Shorts auto-publishing work?</summary><p data-i18n="a5">On Creator and Studio plans, you connect your channel once via official Google sign-in. Then tap “Publish to YouTube Shorts” right beneath finished clips. You can disconnect anytime.</p></details>
+      <details><summary data-i18n="q6">How do I cancel my subscription if I want to pause?</summary><p data-i18n="a6">Cancel in a single click inside the Telegram bot menu — no emails or support tickets needed. Your current 30-day period stays active until it expires.</p></details>
     </div>
   </div>
 </section>
@@ -346,9 +499,10 @@
 <div class="final">
   <div class="container">
     <div class="final-box reveal">
-      <h2 data-i18n="final_t">Your first Short — in 6 minutes.</h2>
-      <a class="btn btn-primary" href="https://t.me/remtex_shorts_ai_bot?start=free" target="_blank" rel="noopener" data-i18n="nav_cta">Open in Telegram</a>
-      <p class="hero-note mono" data-i18n="final_note">Free · No card · Cancel in one click</p>
+      <h2 data-i18n="final_t">Your archive videos are already filmed. Turn them into views today.</h2>
+      <p class="final-sub" data-i18n="final_sub">Open the bot now, claim 10 free videos, and get your first 3 finished Shorts in 6 minutes.</p>
+      <a class="btn btn-primary" href="https://t.me/remtex_shorts_ai_bot?start=free" target="_blank" rel="noopener" data-i18n="final_cta">Open Bot &amp; Cut Free Now</a>
+      <p class="hero-note mono" data-i18n="final_note">10 free videos · No card · −22% Early Adopter while 12 spots last</p>
     </div>
   </div>
 </div>
@@ -372,12 +526,12 @@
   <div class="container foot">
     <div>
       <a class="logo" href="#top" data-i18n-aria="aria_home" aria-label="KoShorts — home"><span class="logo-mark" aria-hidden="true">K</span><span>KoShorts</span></a>
-      <p class="foot-by" data-i18n="foot_by">Made by a practicing YouTube creator, not by marketers.</p>
+      <p class="foot-by" data-i18n="foot_by">Built by a practicing YouTube creator (@rem-tex), not marketing theorists.</p>
     </div>
     <div class="foot-r">
       <nav class="foot-links" aria-label="Footer links" data-i18n-aria="aria_foot">
         <a href="#pricing" data-i18n="foot_pricing">Pricing</a>
-        <a href="#how" data-i18n="foot_how">How it works</a>
+        <a href="#demo" data-i18n="foot_how">Case Study</a>
         <a href="/privacy/?lang=en" data-legal-link="privacy" data-i18n="foot_privacy">Privacy</a>
         <a href="/terms/?lang=en" data-legal-link="terms" data-i18n="foot_terms">Terms</a>
         <a href="https://t.me/remtex_shorts_ai_bot" target="_blank" rel="noopener">Telegram</a>
