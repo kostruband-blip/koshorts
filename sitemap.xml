@@ -4,12 +4,21 @@
   <url>
     <loc>https://koshorts.vercel.app/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://koshorts.vercel.app/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://koshorts.vercel.app/uk/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://koshorts.vercel.app/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://koshorts.vercel.app/"/>
+  </url>
+  <url>
+    <loc>https://koshorts.vercel.app/uk/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://koshorts.vercel.app/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://koshorts.vercel.app/uk/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://koshorts.vercel.app/en/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://koshorts.vercel.app/"/>
   </url>
   <url>
     <loc>https://koshorts.vercel.app/en/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://koshorts.vercel.app/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://koshorts.vercel.app/uk/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://koshorts.vercel.app/en/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://koshorts.vercel.app/"/>
   </url>

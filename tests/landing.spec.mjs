@@ -2,10 +2,14 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 const CYRILLIC_RE = /[А-Яа-яЁёІіЇїЄєҐґ]/;
+const RU_ONLY_LETTERS_RE = /[ыъэёЫЪЭЁ]/;
 
-test('Mobile Telegram chat messages render top-to-bottom in chronological order', async ({ page }) => {
+test('Mobile Telegram chat messages render top-to-bottom in chronological order without horizontal overflow', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/?lang=ru');
+
+  const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+  expect(scrollWidth).toBeLessThanOrEqual(375);
 
   const cards = page.locator('.tg-msgs .m');
   await expect(cards).toHaveCount(4);
@@ -34,6 +38,19 @@ test('Shorts modal fits within landscape mobile viewport (667x375) without overf
 
   await page.keyboard.press('Escape');
   await expect(boxEl).toBeHidden();
+});
+
+test('Ukrainian route /uk/ renders zero Russian-only letters and passes full WCAG AA axe-core check', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/uk/');
+
+  const bodyText = await page.locator('body').innerText();
+  expect(RU_ONLY_LETTERS_RE.test(bodyText)).toBe(false);
+
+  const accessibilityScanResults = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa'])
+    .analyze();
+  expect(accessibilityScanResults.violations).toEqual([]);
 });
 
 test('English route /en/ renders zero Cyrillic and passes full WCAG AA axe-core check', async ({ page }) => {
